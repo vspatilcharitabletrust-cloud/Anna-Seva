@@ -10,6 +10,7 @@ export const translations = {
     nav: {
       home: 'HOME',
       about: 'ABOUT',
+      media: 'MEDIA',
       available_food: 'AVAILABLE FOOD LIST',
       donate: 'DONATE',
       contact: 'CONTACT',
@@ -65,7 +66,7 @@ export const translations = {
 
       trust_cta_title: 'Help Us Prevent Hunger',
       trust_cta_desc: 'Whether you represent a banquet hall with surplus catering or an NGO looking for support, Anna Seva provides a modern, direct, and verified platform to coordinate logistics and distribute fresh meals.',
-      donate_now: '💝 Donate Now',
+      donate_now: 'Donate Now',
       reg_as_donor: 'Register as Donor',
       contact_office: 'Contact Trust Office'
     },
@@ -73,9 +74,27 @@ export const translations = {
     media: {
       tag: 'MEDIA SPOTLIGHT & COVERAGE',
       title: 'अन्न सेवा वृत्तपत्र प्रसिद्धी',
-      desc: 'See what leading newspapers say about our efforts to reduce food waste and coordinate deliveries to feed the needy across Latur and Marathwada.',
+      page_title: 'Media Spotlight & Press Coverage',
+      page_subtitle: 'Documenting the food rescue revolution across Latur, Marathwada & Whole Maharashtra. Explore how Maharashtra\'s leading newspapers highlighted Anna Seva\'s digital initiative to feed the needy and eliminate food waste.',
+      desc: 'See what leading newspapers say about our efforts to reduce food waste and coordinate deliveries to feed the needy across Latur, Marathwada & Whole Maharashtra.',
       zoom_badge: '🔍 Click to Zoom / Read',
-      view_clip_btn: '📰 View Full Newspaper Clip'
+      view_clip_btn: '📰 View Full Newspaper Clip',
+      view_all: 'Explore All Media Coverage →',
+      filter_all: 'All Coverage',
+      filter_dailies: 'Leading Dailies (सकाळ / लोकमत / एकमत)',
+      filter_tech: 'Digital Initiative & Tech',
+      filter_founder: 'President\'s Message',
+      stat_features: '6+ Press Features',
+      stat_features_desc: 'In leading Marathi dailies & digital media',
+      stat_ngo: '25+ Partner NGOs',
+      stat_ngo_desc: 'United in our food redistribution network',
+      stat_region: 'Latur, Marathwada & Whole Maharashtra',
+      stat_region_desc: 'Comprehensive regional outreach',
+      featured_badge: 'FEATURED EDITORIAL STORY',
+      inspect_hint: 'Click on any clipping to view in high-resolution zoom mode',
+      press_inquiry_title: 'Press & Media Relations',
+      press_inquiry_desc: 'Are you a journalist or reporter covering social impact, technological innovation in charity, or food rescue? We welcome press coverage, interviews, and documentary inquiries.',
+      press_inquiry_btn: 'Contact Media Desk'
     },
     // About page
     about: {
@@ -96,7 +115,11 @@ export const translations = {
       trustee_role: 'Founding President',
       trustee_org: 'Founding President at Shri. Vishwanathrao Shamrao Patil Trust, Latur',
       trustee_job: 'Software Developer at zCon Solutions Pvt. Ltd, Kothrud',
-      trustee_edu: "B.Tech CSE'25 Graduate from Vellore Institute of Technology"
+      trustee_edu: "B.Tech CSE'25 Graduate from Vellore Institute of Technology",
+      insta_official_title: 'Official Account of Trust',
+      follow_updates: 'Follow for Updates',
+      insta_desc: 'Stay connected with daily redistribution activities, volunteer stories & trust initiatives.',
+      follow_btn: 'Follow on Instagram ↗'
     },
     // Available food page
     food: {
@@ -161,7 +184,7 @@ export const translations = {
       tax_badge: 'TAX EXEMPT UNDER SECTION 80G',
       hero_title: 'Donate Now & Make a Difference',
       hero_desc: 'Your generous contribution helps us feed the hungry and reduce food waste across Maharashtra. Every rupee counts.',
-      card_title: '💝 Make a Donation',
+      card_title: 'Make a Donation',
       select_amount: 'Select Amount (₹)',
       custom_amount_label: 'Or enter a custom amount',
       custom_amount_placeholder: 'Enter amount',
@@ -228,6 +251,8 @@ export const translations = {
       helpline_val: '+91 1800-111-222',
       office_title: 'Central Office',
       office_val: 'Matoshree Empire, Latur, Maharashtra, India',
+      instagram_title: 'Official Account of Trust',
+      follow_updates: 'Follow for Updates',
 
       form_title: 'Send Message',
       name_label: 'Full Name',
@@ -312,6 +337,8 @@ export const translations = {
     // Footer
     footer: {
       trust_title: 'Shri Vishwanathrao Shamrao Patil Charitable Trust, Latur',
+      insta_official_title: 'Official Account of Trust',
+      follow_updates: 'Follow for Updates',
       rights: '© 2026 Anna Seva. All rights reserved. Connecting Donors & Feeding the Needy.'
     }
   },
@@ -320,6 +347,7 @@ export const translations = {
     nav: {
       home: 'मुख्य पृष्ठ',
       about: 'हमारे बारे में',
+      media: 'मीडिया',
       available_food: 'उपलब्ध भोजन सूची',
       donate: 'दान करें',
       contact: 'संपर्क',
@@ -374,16 +402,34 @@ export const translations = {
 
       trust_cta_title: 'भूख मिटाने में हमारी मदद करें',
       trust_cta_desc: 'चाहे आप अतिरिक्त केटरिंग वाले बैंक्वेट हॉल का प्रतिनिधित्व करते हों या सहायता की तलाश में कोई एनजीओ हों, अन्न सेवा भोजन वितरित करने के लिए एक आधुनिक और सत्यापित मंच प्रदान करती है।',
-      donate_now: '💝 अभी दान करें',
+      donate_now: 'अभी दान करें',
       reg_as_donor: 'दाता के रूप में पंजीकरण करें',
       contact_office: 'ट्रस्ट कार्यालय से संपर्क करें'
     },
     media: {
       tag: 'मीडिया कवरेज एवं समाचार',
       title: 'अन्न सेवा वृत्तपत्र प्रसिद्धी',
-      desc: 'देखें कि प्रमुख समाचार पत्र लातूर और मराठवाड़ा में भोजन की बर्बादी को रोकने और जरूरतमंदों को भोजन कराने के हमारे प्रयासों के बारे में क्या कहते हैं।',
+      page_title: 'मीडिया कवरेज एवं समाचार',
+      page_subtitle: 'लातूर, मराठवाड़ा और संपूर्ण महाराष्ट्र में खाद्य बचाव क्रांति का दस्तावेजीकरण। जानें कि कैसे महाराष्ट्र के प्रमुख समाचार पत्रों ने जरूरतमंदों को भोजन कराने और भोजन की बर्बादी को समाप्त करने की अन्न सेवा की डिजिटल पहल पर प्रकाश डाला।',
+      desc: 'देखें कि प्रमुख समाचार पत्र लातूर, मराठवाड़ा और संपूर्ण महाराष्ट्र में भोजन की बर्बादी को रोकने और जरूरतमंदों को भोजन कराने के हमारे प्रयासों के बारे में क्या कहते हैं।',
       zoom_badge: '🔍 बड़ा करके पढ़ें',
-      view_clip_btn: '📰 पूरी समाचार कतरन देखें'
+      view_clip_btn: '📰 पूरी समाचार कतरन देखें',
+      view_all: 'सभी समाचार व मीडिया देखें →',
+      filter_all: 'सभी समाचार',
+      filter_dailies: 'प्रमुख समाचार पत्र (सकाळ / लोकमत / एकमत)',
+      filter_tech: 'डिजिटल पहल व तकनीक',
+      filter_founder: 'संस्थापक अध्यक्ष संदेश',
+      stat_features: '६+ प्रमुख समाचार',
+      stat_features_desc: 'अग्रणी मराठी समाचार पत्रों और डिजिटल मीडिया में',
+      stat_ngo: '२५+ सहयोगी संस्थाएं',
+      stat_ngo_desc: 'हमारे अन्न वितरण नेटवर्क से जुड़ी संस्थाएं',
+      stat_region: 'लातूर, मराठवाड़ा व संपूर्ण महाराष्ट्र',
+      stat_region_desc: 'व्यापक क्षेत्रीय पहुंच और प्रभाव',
+      featured_badge: 'प्रमुख समाचार लेख',
+      inspect_hint: 'पूरी क्लिपिंग उच्च-रिज़ॉल्यूशन में देखने के लिए किसी भी छवि पर क्लिक करें',
+      press_inquiry_title: 'प्रेस एवं मीडिया संपर्क',
+      press_inquiry_desc: 'क्या आप सामाजिक प्रभाव और खाद्य सुरक्षा पर रिपोर्टिंग करने वाले पत्रकार हैं? हम साक्षात्कार और प्रेस पूछताछ का स्वागत करते हैं।',
+      press_inquiry_btn: 'मीडिया डेस्क से संपर्क करें'
     },
     about: {
       title: 'अन्न सेवा के बारे में',
@@ -403,7 +449,11 @@ export const translations = {
       trustee_role: 'संस्थापक अध्यक्ष',
       trustee_org: 'संस्थापक अध्यक्ष - श्री. विश्वनाथराव शामराव पाटिल ट्रस्ट, लातूर',
       trustee_job: 'सॉफ्टवेयर डेवलपर - जेडकॉन सॉल्यूशंस प्राइवेट लिमिटेड, कोथरुड',
-      trustee_edu: "बी.टेक सीएसई'25 स्नातक - वेल्लोर इंस्टीट्यूट ऑफ टेक्नोलॉजी"
+      trustee_edu: "बी.टेक सीएसई'25 स्नातक - वेल्लोर इंस्टीट्यूट ऑफ टेक्नोलॉजी",
+      insta_official_title: 'ट्रस्ट का आधिकारिक अकाउंट',
+      follow_updates: 'अपडेट्स के लिए फॉलो करें',
+      insta_desc: 'दैनिक भोजन वितरण गतिविधियों, स्वयंसेवकों की कहानियों और ट्रस्ट की पहलों से जुड़े रहें।',
+      follow_btn: 'इंस्टाग्राम पर फॉलो करें ↗'
     },
     food: {
       network_tag: 'अतिरिक्त भोजन वितरण नेटवर्क',
@@ -465,7 +515,7 @@ export const translations = {
       tax_badge: 'धारा 80G के तहत कर छूट',
       hero_title: 'अभी दान करें और बदलाव लाएं',
       hero_desc: 'आपका योगदान हमें महाराष्ट्र भर में भूखों को खाना खिलाने और भोजन की बर्बादी को कम करने में मदद करता है।',
-      card_title: '💝 दान करें',
+      card_title: 'दान करें',
       select_amount: 'राशि चुनें (₹)',
       custom_amount_label: 'या अन्य राशि दर्ज करें',
       custom_amount_placeholder: 'राशि दर्ज करें',
@@ -531,6 +581,8 @@ export const translations = {
       helpline_val: '+91 1800-111-222',
       office_title: 'केंद्रीय कार्यालय',
       office_val: 'मातोश्री एम्पायर, लातूर, महाराष्ट्र, भारत',
+      instagram_title: 'ट्रस्ट का आधिकारिक अकाउंट',
+      follow_updates: 'अपडेट्स के लिए फॉलो करें',
 
       form_title: 'संदेश भेजें',
       name_label: 'पूरा नाम',
@@ -611,6 +663,8 @@ export const translations = {
     },
     footer: {
       trust_title: 'श्री विश्वनाथराव शामराव पाटिल चैरिटेबल ट्रस्ट, लातूर',
+      insta_official_title: 'ट्रस्ट का आधिकारिक अकाउंट',
+      follow_updates: 'अपडेट्स के लिए फॉलो करें',
       rights: '© 2026 अन्न सेवा। सर्वाधिकार सुरक्षित। दाताओं को जोड़ना और जरूरतमंदों को भोजन कराना।'
     }
   },
@@ -619,6 +673,7 @@ export const translations = {
     nav: {
       home: 'मुखपृष्ठ',
       about: 'आमच्याबद्दल',
+      media: 'वृत्तपत्र प्रसिद्धी',
       available_food: 'उपलब्ध अन्न सूची',
       donate: 'दान करा',
       contact: 'संपर्क',
@@ -673,16 +728,34 @@ export const translations = {
 
       trust_cta_title: 'भूकमुक्त समाज निर्मितीत मदत करा',
       trust_cta_desc: 'तुमचे लग्न कार्यालय असो, हॉटेल असो किंवा अन्नाची गरज असणारी स्वयंसेवी संस्था असो, अन्न सेवा ताजे अन्न सुरक्षितपणे पोहोचवण्यासाठी एक आधुनिक आणि विश्वासू मंच प्रदान करते.',
-      donate_now: '💝 आता दान करा',
+      donate_now: 'आता दान करा',
       reg_as_donor: 'दाता म्हणून नोंदणी करा',
       contact_office: 'ट्रस्ट कार्यालयाशी संपर्क करा'
     },
     media: {
       tag: 'माध्यम प्रसिद्धी व बातम्या',
       title: 'अन्न सेवा वृत्तपत्र प्रसिद्धी',
-      desc: 'लातूर व मराठवाड्यात अन्नाची नासाडी रोखण्यासाठी आणि गरजूंना अन्न पुरवण्यासाठी आमच्या प्रयत्नांबद्दल वृत्तपत्रांनी प्रसिद्ध केलेल्या बातम्या पहा.',
+      page_title: 'अन्न सेवा वृत्तपत्र प्रसिद्धी',
+      page_subtitle: 'लातूर, मराठवाडा व संपूर्ण महाराष्ट्रातील अन्नदान क्रांतीचे वृत्तपत्रांमधील वास्तव. गरजूंना अन्न पुरवण्यासाठी आणि अन्नाची नासाडी रोखण्यासाठी महाराष्ट्रातील नामांकित वृत्तपत्रांनी घेतलेली अन्न सेवा डिजिटल उपक्रमाची विशेष दखल.',
+      desc: 'लातूर, मराठवाडा व संपूर्ण महाराष्ट्रात अन्नाची नासाडी रोखण्यासाठी आणि गरजूंना अन्न पुरवण्यासाठी आमच्या प्रयत्नांबद्दल वृत्तपत्रांनी प्रसिद्ध केलेल्या बातम्या पहा.',
       zoom_badge: '🔍 मोठे करून वाचण्यासाठी क्लिक करा',
-      view_clip_btn: '📰 संपूर्ण बातमी पहा'
+      view_clip_btn: '📰 संपूर्ण बातमी पहा',
+      view_all: 'सर्व वृत्तपत्र प्रसिद्धी पहा →',
+      filter_all: 'सर्व प्रसिद्धी',
+      filter_dailies: 'प्रमुख वृत्तपत्रे (सकाळ / लोकमत / एकमत)',
+      filter_tech: 'डिजिटल उपक्रम व तंत्रज्ञान',
+      filter_founder: 'संस्थापक अध्यक्ष संदेश',
+      stat_features: '६+ वृत्तपत्र प्रसिद्धी',
+      stat_features_desc: 'अग्रगण्य मराठी दैनिके व डिजिटल माध्यमातून प्रसिद्ध',
+      stat_ngo: '२५+ स्वयंसेवी संस्था',
+      stat_ngo_desc: 'आमच्या अन्न वाटप मोहिमेत जोडलेल्या संस्था',
+      stat_region: 'लातूर, मराठवाडा व संपूर्ण महाराष्ट्र',
+      stat_region_desc: 'विस्तृत प्रादेशिक समन्वय व सेवा कार्य',
+      featured_badge: 'विशेष वृत्तपत्र प्रसिद्धी',
+      inspect_hint: 'कोणत्याही बातमीची मूळ कतरन हाय-डेफिनिशनमध्ये वाचण्यासाठी त्यावर क्लिक करा',
+      press_inquiry_title: 'पत्रकार व माध्यम संपर्क कक्ष',
+      press_inquiry_desc: 'तुम्ही सामाजिक कार्य, तंत्रज्ञान किंवा अन्न सुरक्षा यावर वृत्तांकन करणारे पत्रकार किंवा प्रतिनिधी आहात का? मुलाखत किंवा माहितीसाठी आमच्या माध्यम कक्षाशी संपर्क साधा.',
+      press_inquiry_btn: 'माध्यम कक्षाशी संपर्क करा'
     },
     about: {
       title: 'अन्न सेवा बद्दल',
@@ -702,7 +775,11 @@ export const translations = {
       trustee_role: 'संस्थापक अध्यक्ष',
       trustee_org: 'संस्थापक अध्यक्ष - श्री. विश्वनाथराव शामराव पाटील ट्रस्ट, लातूर',
       trustee_job: 'सॉफ्टवेअर डेव्हलपर - झेडकॉन सोल्यूशन्स प्रा. लि., कोथरूड',
-      trustee_edu: "बी.टेक सीएसई'25 पदवीधर - वेल्लोर इन्स्टिट्यूट ऑफ तंत्रज्ञान"
+      trustee_edu: "बी.टेक सीएसई'25 पदवीधर - वेल्लोर इन्स्टिट्यूट ऑफ तंत्रज्ञान",
+      insta_official_title: 'ट्रस्टचे अधिकृत खाते',
+      follow_updates: 'नवीनतम माहितीसाठी फॉलो करा',
+      insta_desc: 'दररोजच्या अन्नदान सेवा, स्वयंसेवक उपक्रम आणि ट्रस्टच्या ताज्या घडामोडींशी जोडलेले राहा.',
+      follow_btn: 'इंस्टाग्रामवर फॉलो करा ↗'
     },
     food: {
       network_tag: 'अतिरिक्त अन्न वाटप जाळे',
@@ -764,7 +841,7 @@ export const translations = {
       tax_badge: 'कलम 80G अंतर्गत कर सवलत',
       hero_title: 'आता दान करा आणि योगदान द्या',
       hero_desc: 'तुमचे अमूल्य योगदान महाराष्ट्रातील भुकेलेल्यांना अन्न देण्यास आणि अन्नाची नासाडी रोखण्यास मदत करते.',
-      card_title: '💝 दान करा',
+      card_title: 'दान करा',
       select_amount: 'रक्कम निवडा (₹)',
       custom_amount_label: 'किंवा तुमची रक्कम प्रविष्ट करा',
       custom_amount_placeholder: 'रक्कम टाका',
@@ -830,6 +907,8 @@ export const translations = {
       helpline_val: '+91 1800-111-222',
       office_title: 'मध्यवर्ती कार्यालय',
       office_val: 'मातोश्री एम्पायर, लातूर, महाराष्ट्र, भारत',
+      instagram_title: 'ट्रस्टचे अधिकृत खाते',
+      follow_updates: 'नवीनतम माहितीसाठी फॉलो करा',
 
       form_title: 'संदेश पाठवा',
       name_label: 'संपूर्ण नाव',
@@ -910,6 +989,8 @@ export const translations = {
     },
     footer: {
       trust_title: 'श्री विश्वनाथराव शामराव पाटील चॅरिटेबल ट्रस्ट, लातूर',
+      insta_official_title: 'ट्रस्टचे अधिकृत खाते',
+      follow_updates: 'नवीनतम माहितीसाठी फॉलो करा',
       rights: '© 2026 अन्न सेवा. सर्व हक्क सुरक्षित. दात्यांना जोडणे व गरजूंना अन्न पुरवणे.'
     }
   }

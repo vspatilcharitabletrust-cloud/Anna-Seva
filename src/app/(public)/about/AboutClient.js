@@ -132,6 +132,113 @@ export default function AboutClient({ dbAboutText }) {
           </div>
         </div>
       </div>
+
+      {/* Official Instagram Account Card */}
+      <div style={{
+        marginTop: '2.5rem',
+        background: 'linear-gradient(135deg, #ffffff 0%, #fff7f9 100%)',
+        padding: '2rem 2.25rem',
+        borderRadius: '16px',
+        border: '1px solid rgba(225, 48, 108, 0.2)',
+        boxShadow: '0 10px 25px rgba(225, 48, 108, 0.06)',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '1.5rem',
+        flexWrap: 'wrap'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flex: '1', minWidth: '280px' }}>
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '14px',
+            background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#ffffff',
+            boxShadow: '0 6px 18px rgba(225, 48, 108, 0.35)',
+            flexShrink: 0
+          }}>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e293b', margin: 0 }}>
+                {t('about.insta_official_title', 'Official Account of Trust')}
+              </h3>
+              <span style={{
+                fontSize: '0.72rem',
+                backgroundColor: 'rgba(225, 48, 108, 0.12)',
+                color: '#e1306c',
+                padding: '0.2rem 0.6rem',
+                borderRadius: '999px',
+                fontWeight: 700,
+                border: '1px solid rgba(225, 48, 108, 0.2)'
+              }}>
+                {t('about.follow_updates', 'Follow for Updates')}
+              </span>
+            </div>
+            <p style={{ color: '#64748b', fontSize: '0.92rem', margin: '0 0 0.35rem 0', lineHeight: 1.4 }}>
+              {t('about.insta_desc', 'Stay connected with daily redistribution activities, volunteer stories & trust initiatives.')}
+            </p>
+            <a
+              href="https://www.instagram.com/shri.vishwanathrao.patil_trust?vrfl=bGpvbGcxaGlsNHF1&utm_source=qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: '#e1306c',
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
+              }}
+            >
+              @shri.vishwanathrao.patil_trust
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <a
+            href="https://www.instagram.com/shri.vishwanathrao.patil_trust?vrfl=bGpvbGcxaGlsNHF1&utm_source=qr"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.6rem',
+              padding: '0.75rem 1.4rem',
+              background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+              color: '#ffffff',
+              borderRadius: '10px',
+              textDecoration: 'none',
+              fontWeight: 700,
+              fontSize: '0.95rem',
+              boxShadow: '0 6px 16px rgba(225, 48, 108, 0.3)',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 22px rgba(225, 48, 108, 0.45)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(225, 48, 108, 0.3)';
+            }}
+          >
+            <span>{t('about.follow_btn', 'Follow on Instagram ↗')}</span>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

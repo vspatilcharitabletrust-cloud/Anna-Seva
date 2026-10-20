@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import NewsCarousel from '@/components/NewsCarousel';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function HomePageClient({ donorCount, foodCount, completedCount }) {
@@ -54,8 +53,58 @@ export default function HomePageClient({ donorCount, foodCount, completedCount }
         </div>
       </section>
 
-      {/* News Coverage Carousel */}
-      <NewsCarousel />
+      {/* Media Spotlight Banner */}
+      <section style={{
+        background: 'linear-gradient(135deg, #f0fdfa 0%, #ffffff 50%, #f8fafc 100%)',
+        borderBottom: '1px solid var(--border-light)',
+        padding: '3rem 1.5rem',
+        textAlign: 'center'
+      }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.35rem 1rem', borderRadius: '50px', background: 'rgba(13, 148, 136, 0.08)', border: '1.5px solid rgba(13, 148, 136, 0.2)' }}>
+            <span style={{ fontSize: '0.9rem' }}>📰</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--accent-teal-dark)', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              {t('media.tag', 'MEDIA SPOTLIGHT & COVERAGE')}
+            </span>
+          </div>
+
+          <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', color: 'var(--primary-navy)', fontFamily: 'var(--font-title)', fontWeight: 800, margin: 0 }}>
+            {t('media.title', 'अन्न सेवा वृत्तपत्र प्रसिद्धी')}
+          </h2>
+
+          <p style={{ color: '#475569', fontSize: '1.02rem', maxWidth: '680px', margin: 0, lineHeight: 1.6 }}>
+            {t('media.desc', 'See what leading newspapers say about our efforts to reduce food waste and coordinate deliveries to feed the needy across Latur, Marathwada & Whole Maharashtra.')}
+          </p>
+
+          <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap', justifyContent: 'center', margin: '0.5rem 0' }}>
+            <span style={{ backgroundColor: '#ffffff', border: '1px solid var(--border-light)', padding: '0.35rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '700', color: '#dc2626' }}>सकाळ वृत्तसेवा</span>
+            <span style={{ backgroundColor: '#ffffff', border: '1px solid var(--border-light)', padding: '0.35rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '700', color: '#2563eb' }}>लोकमत</span>
+            <span style={{ backgroundColor: '#ffffff', border: '1px solid var(--border-light)', padding: '0.35rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '700', color: '#0d9488' }}>एकमत</span>
+            <span style={{ backgroundColor: '#ffffff', border: '1px solid var(--border-light)', padding: '0.35rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '700', color: '#d97706' }}>आपलं मन</span>
+          </div>
+
+          <Link
+            href="/media"
+            style={{
+              marginTop: '0.35rem',
+              backgroundColor: 'var(--accent-teal)',
+              color: '#ffffff',
+              padding: '0.75rem 1.85rem',
+              borderRadius: '50px',
+              fontWeight: '700',
+              fontSize: '0.92rem',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 4px 15px rgba(13, 148, 136, 0.25)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <span>📰</span> {t('media.view_all', 'View All Media Coverage →')}
+          </Link>
+        </div>
+      </section>
 
       {/* Core Mission Callout */}
       <section style={{ padding: '5rem 2rem', borderBottom: '1px solid var(--border-light)', backgroundColor: '#ffffff' }}>
@@ -238,8 +287,27 @@ export default function HomePageClient({ donorCount, foodCount, completedCount }
             {t('home.trust_cta_desc', 'Whether you represent a banquet hall with surplus catering or an NGO looking for support, Anna Seva provides a modern, direct, and verified platform to coordinate logistics and distribute fresh meals.')}
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/donate" className="form-submit-btn" style={{ width: 'auto', padding: '1rem 2.5rem', borderRadius: '50px', textDecoration: 'none', margin: 0, background: 'linear-gradient(135deg, #d97706, #b45309)', boxShadow: '0 4px 16px rgba(217, 119, 6, 0.3)' }}>
-              {t('home.donate_now', '💝 Donate Now')}
+            <Link
+              href="/donate"
+              className="form-submit-btn"
+              style={{
+                width: 'auto',
+                padding: '1rem 2.5rem',
+                borderRadius: '50px',
+                textDecoration: 'none',
+                margin: 0,
+                background: 'linear-gradient(135deg, #d97706, #b45309)',
+                boxShadow: '0 4px 16px rgba(217, 119, 6, 0.3)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.55rem'
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              <span>{t('home.donate_now', 'Donate Now')}</span>
             </Link>
             <Link href="/donor/register" className="form-submit-btn" style={{ width: 'auto', padding: '1rem 2.5rem', borderRadius: '50px', textDecoration: 'none', margin: 0 }}>
               {t('home.reg_as_donor', 'Register as Donor')}

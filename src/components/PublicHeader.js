@@ -48,6 +48,7 @@ export default function PublicHeader() {
   const navItems = [
     { label: t('nav.home', 'HOME'), path: '/' },
     { label: t('nav.about', 'ABOUT'), path: '/about' },
+    { label: t('nav.media', 'MEDIA'), path: '/media' },
     { label: t('nav.available_food', 'AVAILABLE FOOD LIST'), path: '/available-food' },
     { label: t('nav.donate', 'DONATE'), path: '/donate' },
     { label: t('nav.contact', 'CONTACT'), path: '/contact' }
@@ -61,11 +62,12 @@ export default function PublicHeader() {
             src="/icon.png" 
             alt="Anna Seva Logo" 
             style={{ 
-              width: '42px', 
-              height: '42px', 
+              width: '32px', 
+              height: '32px', 
               borderRadius: '50%',
               objectFit: 'cover',
-              border: '2px solid var(--accent-teal)'
+              border: '2px solid var(--accent-teal)',
+              flexShrink: 0
             }} 
           />
           <span className="public-logo-devanagari">अन्न सेवा</span>
@@ -98,7 +100,7 @@ export default function PublicHeader() {
           })}
           
           {user ? (
-            <li>
+            <li className="nav-dashboard-item">
               <Link
                 href={user.role === 'admin' ? '/admin/dashboard' : '/donor/dashboard'}
                 className="dashboard-badge-link"
@@ -126,11 +128,12 @@ export default function PublicHeader() {
           )}
 
           {/* Language Selector Feature Button */}
-          <li ref={langRef} style={{ position: 'relative' }}>
-            <button
-              type="button"
-              onClick={() => setLangOpen(!langOpen)}
-              className="language-selector-btn"
+          <li ref={langRef} className="language-selector-item" style={{ position: 'relative' }}>
+            <div className="language-selector-wrapper" style={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+              <button
+                type="button"
+                onClick={() => setLangOpen(!langOpen)}
+                className="language-selector-btn"
               style={{
                 background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(15, 118, 110, 0.12))',
                 border: '1.5px solid var(--accent-teal)',
@@ -236,6 +239,7 @@ export default function PublicHeader() {
                 </button>
               </div>
             )}
+            </div>
           </li>
         </ul>
       </nav>

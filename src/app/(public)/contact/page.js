@@ -84,19 +84,57 @@ export default function ContactPage() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.5rem', backgroundColor: 'var(--primary-teal-light)', padding: '0.5rem', borderRadius: '8px', color: 'var(--primary-teal-dark)' }}>📞</span>
-            <div>
-              <div style={{ fontWeight: 600 }}>{t('contact.helpline_title', 'Helpline Number')}</div>
-              <div style={{ color: 'var(--text-muted)', wordBreak: 'break-word' }}>{t('contact.helpline_val', '+91 1800-111-222')}</div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <span style={{ fontSize: '1.5rem', backgroundColor: 'var(--primary-teal-light)', padding: '0.5rem', borderRadius: '8px', color: 'var(--primary-teal-dark)' }}>📍</span>
             <div>
               <div style={{ fontWeight: 600 }}>{t('contact.office_title', 'Central Office')}</div>
               <div style={{ color: 'var(--text-muted)', wordBreak: 'break-word' }}>{t('contact.office_val', 'Matoshree Empire, Latur, Maharashtra, India')}</div>
             </div>
           </div>
+          <a
+            href="https://www.instagram.com/shri.vishwanathrao.patil_trust?vrfl=bGpvbGcxaGlsNHF1&utm_source=qr"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex',
+              gap: '1rem',
+              alignItems: 'center',
+              textDecoration: 'none',
+              color: 'inherit',
+              transition: 'transform 0.2s ease'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateX(4px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateX(0)'; }}
+          >
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '44px',
+              height: '44px',
+              borderRadius: '10px',
+              background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+              color: '#ffffff',
+              flexShrink: 0,
+              boxShadow: '0 4px 12px rgba(225, 48, 108, 0.25)'
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </span>
+            <div>
+              <div style={{ fontWeight: 600, color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                <span>{t('contact.instagram_title', 'Official Account of Trust')}</span>
+                <span style={{ fontSize: '0.72rem', backgroundColor: 'rgba(225, 48, 108, 0.1)', color: '#e1306c', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 700 }}>
+                  {t('contact.follow_updates', 'Follow for Updates')}
+                </span>
+              </div>
+              <div style={{ color: 'var(--accent-teal-dark)', wordBreak: 'break-word', fontWeight: 600, fontSize: '0.92rem', marginTop: '0.15rem' }}>
+                @shri.vishwanathrao.patil_trust ↗
+              </div>
+            </div>
+          </a>
         </div>
       </div>
 

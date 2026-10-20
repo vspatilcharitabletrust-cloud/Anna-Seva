@@ -7,7 +7,7 @@ const newsItems = [
   {
     id: 6,
     title: "'अन्नसेवा' डिजिटल उपक्रमामुळे उपाशी पोटाला मिळणार आधार",
-    source: "Apal Man (आपलं मणू)",
+    source: "Apal Man (आपलं मन)",
     date: "17 Jun 2026",
     image: "/news/news-6.jpg",
     description: "लातूर व मराठवाड्यातील पहिल्या 'डिजिटल अन्नदान' उपक्रमाचा प्रारंभ. २५ स्वयंसेवी संस्थांच्या मदतीने मंगल कार्यालये, हॉटेल्स व केटर्समधील अतिरिक्त अन्न गरजूंपर्यंत सुरक्षितपणे पोहोचवण्यासाठी 'अन्नसेवा' हे स्वयंचलित डिजिटल पोर्टल सुरू करण्यात आले आहे."
@@ -129,7 +129,7 @@ export default function NewsCarousel() {
           <span className="news-section-tag">{t('media.tag', 'MEDIA SPOTLIGHT & COVERAGE')}</span>
           <h2 className="news-section-title">{t('media.title', 'अन्न सेवा वृत्तपत्र प्रसिद्धी')}</h2>
           <p className="news-section-subtitle">
-            {t('media.desc', 'See what leading newspapers say about our efforts to reduce food waste and coordinate deliveries to feed the needy across Latur and Marathwada.')}
+            {t('media.desc', 'See what leading newspapers say about our efforts to reduce food waste and coordinate deliveries to feed the needy across Latur, Marathwada & Whole Maharashtra.')}
           </p>
         </div>
 

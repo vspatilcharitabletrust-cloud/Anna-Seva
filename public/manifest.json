@@ -1,0 +1,57 @@
+{
+  "name": "अन्न सेवा (Anna Seva) - Feed Needy, Reduce Waste",
+  "short_name": "Anna Seva",
+  "description": "Connecting food donors with shelters and families in need across Maharashtra. Operated by Shri Vishwanathrao Shamrao Patil Charitable Trust.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#090e1a",
+  "theme_color": "#0d9488",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "mr",
+  "categories": ["social", "charity", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Available Food Directory",
+      "short_name": "Food List",
+      "description": "Browse active surplus food listings",
+      "url": "/available-food",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Donate Online (80G)",
+      "short_name": "Donate",
+      "description": "Contribute to Anna Seva Trust",
+      "url": "/donate",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Donor Login",
+      "short_name": "Donor",
+      "description": "List surplus food batches",
+      "url": "/donor/login",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

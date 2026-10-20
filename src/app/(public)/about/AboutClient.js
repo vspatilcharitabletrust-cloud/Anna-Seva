@@ -13,50 +13,189 @@ export default function AboutClient({ dbAboutText }) {
     : (dbAboutText || t('about.default_mission'));
 
   return (
-    <div className="public-container animate-fade-in" style={{ maxWidth: '950px' }}>
-      <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', borderBottom: '3px solid var(--primary-teal)', paddingBottom: '1rem', marginBottom: '2rem', fontFamily: 'var(--font-title)' }}>
-        {t('about.title', 'About Anna Seva')}
-      </h1>
+    <div className="public-container animate-fade-in" style={{ maxWidth: '980px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <span style={{ color: 'var(--accent-teal)', fontWeight: '800', fontSize: '0.85rem', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+          SHRI VISHWANATHRAO SHAMRAO PATIL CHARITABLE TRUST
+        </span>
+        <h1 style={{ fontSize: 'clamp(2.1rem, 5vw, 3.2rem)', fontFamily: 'var(--font-title)', fontWeight: 800, color: 'var(--primary-navy)', letterSpacing: '-0.02em', marginTop: '0.4rem' }}>
+          {t('about.title', 'About Anna Seva')}
+        </h1>
+        <div style={{ width: '60px', height: '4px', background: 'linear-gradient(90deg, var(--accent-teal), #10b981)', borderRadius: '999px', margin: '1rem auto 0' }} />
+      </div>
 
-      <div style={{ background: 'white', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--border-color)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', lineHeight: '1.8' }}>
-        <h2 style={{ color: 'var(--primary-teal-dark)', marginBottom: '1.25rem', fontSize: '1.6rem' }}>
-          {t('about.mission_title', 'Our Mission')}
-        </h2>
-        <p style={{ fontSize: '1.1rem', color: '#334155', whiteSpace: 'pre-line', marginBottom: '2rem' }}>
+      <div style={{
+        background: '#ffffff',
+        padding: '3rem',
+        borderRadius: '24px',
+        border: '1px solid rgba(226, 232, 240, 0.9)',
+        boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.05)',
+        lineHeight: '1.8'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '1.4rem' }}>🎯</span>
+          <h2 style={{ color: 'var(--primary-navy)', fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>
+            {t('about.mission_title', 'Our Mission')}
+          </h2>
+        </div>
+        <p style={{ fontSize: '1.12rem', color: '#475569', whiteSpace: 'pre-line', marginBottom: '2.5rem', lineHeight: '1.8' }}>
           {missionText}
         </p>
 
-        <h2 style={{ color: 'var(--primary-teal-dark)', marginBottom: '1.25rem', fontSize: '1.6rem' }}>
-          {t('about.values_title', 'Core Value Propositions')}
-        </h2>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <li style={{ display: 'flex', gap: '0.85rem' }}>
-            <span style={{ color: 'var(--primary-teal)', fontWeight: 'bold' }}>✓</span>
-            <div><strong>{t('about.val_1_title', 'Zero Waste:')}</strong> {t('about.val_1_desc', 'Ensuring surplus food goes to stomachs, not landfills.')}</div>
-          </li>
-          <li style={{ display: 'flex', gap: '0.85rem' }}>
-            <span style={{ color: 'var(--primary-teal)', fontWeight: 'bold' }}>✓</span>
-            <div><strong>{t('about.val_2_title', 'Safety First:')}</strong> {t('about.val_2_desc', 'Connecting verified donors who maintain food quality standards.')}</div>
-          </li>
-          <li style={{ display: 'flex', gap: '0.85rem' }}>
-            <span style={{ color: 'var(--primary-teal)', fontWeight: 'bold' }}>✓</span>
-            <div><strong>{t('about.val_3_title', 'Localized Impact:')}</strong> {t('about.val_3_desc', 'Filtering requests by State and City to optimize delivery ranges.')}</div>
-          </li>
-          <li style={{ display: 'flex', gap: '0.85rem' }}>
-            <span style={{ color: 'var(--primary-teal)', fontWeight: 'bold' }}>✓</span>
-            <div><strong>{t('about.val_4_title', 'Direct Approvals:')}</strong> {t('about.val_4_desc', 'Donors maintain full control over who receives their listed food.')}</div>
-          </li>
-        </ul>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-light)' }}>
+          <span style={{ fontSize: '1.4rem' }}>💎</span>
+          <h2 style={{ color: 'var(--primary-navy)', fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>
+            {t('about.values_title', 'Core Value Propositions')}
+          </h2>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '1.25rem'
+        }}>
+          <div style={{
+            background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+            border: '1.5px solid rgba(226, 232, 240, 0.85)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'flex-start',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.02)'
+          }}>
+            <span style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(5, 150, 105, 0.2))',
+              color: '#0d9488',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '1rem',
+              flexShrink: 0
+            }}>✓</span>
+            <div>
+              <strong style={{ display: 'block', color: 'var(--primary-navy)', fontSize: '1.02rem', marginBottom: '0.2rem' }}>
+                {t('about.val_1_title', 'Zero Waste:')}
+              </strong>
+              <span style={{ color: '#64748b', fontSize: '0.94rem', lineHeight: '1.55' }}>
+                {t('about.val_1_desc', 'Ensuring surplus food goes to stomachs, not landfills.')}
+              </span>
+            </div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+            border: '1.5px solid rgba(226, 232, 240, 0.85)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'flex-start',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.02)'
+          }}>
+            <span style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(5, 150, 105, 0.2))',
+              color: '#0d9488',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '1rem',
+              flexShrink: 0
+            }}>✓</span>
+            <div>
+              <strong style={{ display: 'block', color: 'var(--primary-navy)', fontSize: '1.02rem', marginBottom: '0.2rem' }}>
+                {t('about.val_2_title', 'Safety First:')}
+              </strong>
+              <span style={{ color: '#64748b', fontSize: '0.94rem', lineHeight: '1.55' }}>
+                {t('about.val_2_desc', 'Connecting verified donors who maintain food quality standards.')}
+              </span>
+            </div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+            border: '1.5px solid rgba(226, 232, 240, 0.85)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'flex-start',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.02)'
+          }}>
+            <span style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(5, 150, 105, 0.2))',
+              color: '#0d9488',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '1rem',
+              flexShrink: 0
+            }}>✓</span>
+            <div>
+              <strong style={{ display: 'block', color: 'var(--primary-navy)', fontSize: '1.02rem', marginBottom: '0.2rem' }}>
+                {t('about.val_3_title', 'Localized Impact:')}
+              </strong>
+              <span style={{ color: '#64748b', fontSize: '0.94rem', lineHeight: '1.55' }}>
+                {t('about.val_3_desc', 'Filtering requests by State and City to optimize delivery ranges.')}
+              </span>
+            </div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+            border: '1.5px solid rgba(226, 232, 240, 0.85)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'flex-start',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.02)'
+          }}>
+            <span style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(5, 150, 105, 0.2))',
+              color: '#0d9488',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '1rem',
+              flexShrink: 0
+            }}>✓</span>
+            <div>
+              <strong style={{ display: 'block', color: 'var(--primary-navy)', fontSize: '1.02rem', marginBottom: '0.2rem' }}>
+                {t('about.val_4_title', 'Direct Approvals:')}
+              </strong>
+              <span style={{ color: '#64748b', fontSize: '0.94rem', lineHeight: '1.55' }}>
+                {t('about.val_4_desc', 'Donors maintain full control over who receives their listed food.')}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Managing Trustee Section */}
       <div style={{
         marginTop: '2.5rem',
         background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        padding: '2.5rem',
-        borderRadius: '16px',
-        border: '1px solid var(--border-color)',
-        boxShadow: '0 10px 30px rgba(15, 23, 42, 0.04)',
+        padding: '2.75rem',
+        borderRadius: '24px',
+        border: '1px solid rgba(226, 232, 240, 0.9)',
+        boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.05)',
         display: 'flex',
         flexDirection: 'row',
         gap: '2.5rem',
@@ -65,12 +204,12 @@ export default function AboutClient({ dbAboutText }) {
       }}>
         <div style={{
           position: 'relative',
-          width: '160px',
-          height: '160px',
-          borderRadius: '12px',
+          width: '170px',
+          height: '170px',
+          borderRadius: '20px',
           overflow: 'hidden',
-          border: '4px solid white',
-          boxShadow: '0 8px 20px rgba(0, 0, 0, 0.08)',
+          border: '4px solid #ffffff',
+          boxShadow: '0 12px 28px rgba(15, 23, 42, 0.12)',
           backgroundColor: '#ffffff',
           display: 'flex',
           alignItems: 'center',
@@ -91,41 +230,51 @@ export default function AboutClient({ dbAboutText }) {
         </div>
 
         <div className="about-trustee-info" style={{ flex: '1', minWidth: '280px' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            padding: '0.3rem 0.85rem',
+            borderRadius: '999px',
+            backgroundColor: 'rgba(13, 148, 136, 0.1)',
+            color: 'var(--accent-teal-dark)',
+            fontSize: '0.78rem',
+            fontWeight: 800,
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            marginBottom: '0.5rem'
+          }}>
+            <span>★</span>
+            <span>{t('about.trustee_role', 'Founding President')}</span>
+          </div>
+
           <h2 style={{
-            color: 'var(--primary-teal-dark)',
-            marginBottom: '0.25rem',
-            fontSize: '1.8rem',
-            fontWeight: '800',
-            fontFamily: 'var(--font-title)'
+            color: 'var(--primary-navy)',
+            marginBottom: '0.35rem',
+            fontSize: '1.9rem',
+            fontWeight: 800,
+            fontFamily: 'var(--font-title)',
+            letterSpacing: '-0.02em'
           }}>
             {t('about.trustee_name', 'Shri. Hridaynath Bhagwat Patil')}
           </h2>
-          <p style={{
-            color: 'var(--primary-teal)',
-            fontWeight: '600',
-            fontSize: '1rem',
-            marginBottom: '1.25rem',
-            letterSpacing: '0.05em'
-          }}>
-            {t('about.trustee_role', 'Founding President')}
-          </p>
 
-          <div className="about-trustee-list">
+          <div className="about-trustee-list" style={{ marginTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '1.3rem', lineHeight: '1', width: '1.3rem', display: 'flex', justifyContent: 'center' }}>🏛️</span>
-              <span style={{ color: '#334155', fontSize: '1rem', lineHeight: '1.5' }}>
+              <span style={{ fontSize: '1.2rem', lineHeight: '1', width: '1.5rem', display: 'flex', justifyContent: 'center' }}>🏛️</span>
+              <span style={{ color: '#334155', fontSize: '0.98rem', lineHeight: '1.5', fontWeight: 600 }}>
                 {t('about.trustee_org', 'Founding President at Shri. Vishwanathrao Shamrao Patil Trust, Latur')}
               </span>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span style={{ color: 'var(--primary-teal)', fontSize: '1.5rem', lineHeight: '1', width: '1.3rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>•</span>
-              <span style={{ color: '#334155', fontSize: '1rem', lineHeight: '1.5' }}>
+              <span style={{ fontSize: '1.2rem', lineHeight: '1', width: '1.5rem', display: 'flex', justifyContent: 'center' }}>💻</span>
+              <span style={{ color: '#475569', fontSize: '0.96rem', lineHeight: '1.5' }}>
                 {t('about.trustee_job', 'Software Developer at zCon Solutions Pvt. Ltd, Kothrud')}
               </span>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span style={{ color: 'var(--primary-teal)', fontSize: '1.5rem', lineHeight: '1', width: '1.3rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>•</span>
-              <span style={{ color: '#334155', fontSize: '1rem', lineHeight: '1.5' }}>
+              <span style={{ fontSize: '1.2rem', lineHeight: '1', width: '1.5rem', display: 'flex', justifyContent: 'center' }}>🎓</span>
+              <span style={{ color: '#475569', fontSize: '0.96rem', lineHeight: '1.5' }}>
                 {t('about.trustee_edu', "B.Tech CSE'25 Graduate from Vellore Institute of Technology")}
               </span>
             </div>

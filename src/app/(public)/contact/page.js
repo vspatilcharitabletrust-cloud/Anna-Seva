@@ -67,55 +67,155 @@ export default function ContactPage() {
     <div className="public-container animate-fade-in responsive-grid-contact">
 
       {/* Contact Info Panel */}
-      <div className="contact-info-panel">
-        <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', color: 'var(--text-dark)', marginBottom: '1rem', fontFamily: 'var(--font-title)' }}>
+      <div className="contact-info-panel" style={{
+        background: '#ffffff',
+        padding: '3rem',
+        borderRadius: '24px',
+        border: '1px solid rgba(226, 232, 240, 0.9)',
+        boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.05)'
+      }}>
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.45rem',
+          padding: '0.3rem 0.85rem',
+          borderRadius: '999px',
+          backgroundColor: 'rgba(13, 148, 136, 0.1)',
+          color: 'var(--accent-teal-dark)',
+          fontSize: '0.78rem',
+          fontWeight: 800,
+          letterSpacing: '1px',
+          textTransform: 'uppercase',
+          marginBottom: '0.75rem'
+        }}>
+          <span>📬</span>
+          <span>GET IN TOUCH</span>
+        </div>
+        <h1 style={{ fontSize: 'clamp(2rem, 5vw, 2.75rem)', color: 'var(--primary-navy)', marginBottom: '1rem', fontFamily: 'var(--font-title)', fontWeight: 800, letterSpacing: '-0.02em' }}>
           {t('contact.title', 'Contact Us')}
         </h1>
-        <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.7', whiteSpace: 'pre-line', marginBottom: '2rem' }}>
+        <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.75', whiteSpace: 'pre-line', marginBottom: '2.25rem' }}>
           {contactDescription}
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.5rem', backgroundColor: 'var(--primary-teal-light)', padding: '0.5rem', borderRadius: '8px', color: 'var(--primary-teal-dark)' }}>✉</span>
+          {/* Email Item */}
+          <a
+            href="mailto:vspatil.charitabletrust@gmail.com"
+            style={{
+              display: 'flex',
+              gap: '1.15rem',
+              alignItems: 'center',
+              padding: '1.2rem',
+              borderRadius: '16px',
+              background: '#f8fafc',
+              border: '1px solid var(--border-light)',
+              textDecoration: 'none',
+              color: 'inherit',
+              transition: 'all 0.25s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.borderColor = 'var(--accent-teal)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(13, 148, 136, 0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#f8fafc';
+              e.currentTarget.style.borderColor = 'var(--border-light)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <span style={{
+              fontSize: '1.35rem',
+              backgroundColor: 'rgba(13, 148, 136, 0.12)',
+              width: '46px',
+              height: '46px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px',
+              color: 'var(--accent-teal-dark)',
+              flexShrink: 0
+            }}>✉</span>
             <div>
-              <div style={{ fontWeight: 600 }}>{t('contact.email_title', 'Email Address')}</div>
-              <div style={{ color: 'var(--text-muted)', wordBreak: 'break-word' }}>{t('contact.email_val', 'vspatil.charitabletrust@gmail.com')}</div>
+              <div style={{ fontWeight: 700, color: 'var(--primary-navy)', fontSize: '0.98rem' }}>{t('contact.email_title', 'Email Address')}</div>
+              <div style={{ color: 'var(--accent-teal-dark)', wordBreak: 'break-word', fontSize: '0.92rem', fontWeight: 600, marginTop: '0.15rem' }}>{t('contact.email_val', 'vspatil.charitabletrust@gmail.com')}</div>
+            </div>
+          </a>
+
+          {/* Central Office Item */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '1.15rem',
+              alignItems: 'center',
+              padding: '1.2rem',
+              borderRadius: '16px',
+              background: '#f8fafc',
+              border: '1px solid var(--border-light)'
+            }}
+          >
+            <span style={{
+              fontSize: '1.35rem',
+              backgroundColor: 'rgba(217, 119, 6, 0.12)',
+              width: '46px',
+              height: '46px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px',
+              color: 'var(--accent-gold)',
+              flexShrink: 0
+            }}>📍</span>
+            <div>
+              <div style={{ fontWeight: 700, color: 'var(--primary-navy)', fontSize: '0.98rem' }}>{t('contact.office_title', 'Central Office')}</div>
+              <div style={{ color: '#475569', wordBreak: 'break-word', fontSize: '0.92rem', marginTop: '0.15rem' }}>{t('contact.office_val', 'Matoshree Empire, Latur, Maharashtra, India')}</div>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.5rem', backgroundColor: 'var(--primary-teal-light)', padding: '0.5rem', borderRadius: '8px', color: 'var(--primary-teal-dark)' }}>📍</span>
-            <div>
-              <div style={{ fontWeight: 600 }}>{t('contact.office_title', 'Central Office')}</div>
-              <div style={{ color: 'var(--text-muted)', wordBreak: 'break-word' }}>{t('contact.office_val', 'Matoshree Empire, Latur, Maharashtra, India')}</div>
-            </div>
-          </div>
+
+          {/* Instagram Item */}
           <a
             href="https://www.instagram.com/shri.vishwanathrao.patil_trust?vrfl=bGpvbGcxaGlsNHF1&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
             style={{
               display: 'flex',
-              gap: '1rem',
+              gap: '1.15rem',
               alignItems: 'center',
+              padding: '1.2rem',
+              borderRadius: '16px',
+              background: '#f8fafc',
+              border: '1px solid rgba(225, 48, 108, 0.25)',
               textDecoration: 'none',
               color: 'inherit',
-              transition: 'transform 0.2s ease'
+              transition: 'all 0.25s ease'
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateX(4px)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateX(0)'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.borderColor = 'rgba(225, 48, 108, 0.6)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(225, 48, 108, 0.12)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#f8fafc';
+              e.currentTarget.style.borderColor = 'rgba(225, 48, 108, 0.25)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           >
             <span style={{
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '44px',
-              height: '44px',
-              borderRadius: '10px',
+              width: '46px',
+              height: '46px',
+              borderRadius: '12px',
               background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
               color: '#ffffff',
               flexShrink: 0,
-              boxShadow: '0 4px 12px rgba(225, 48, 108, 0.25)'
+              boxShadow: '0 4px 14px rgba(225, 48, 108, 0.3)'
             }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -124,13 +224,13 @@ export default function ContactPage() {
               </svg>
             </span>
             <div>
-              <div style={{ fontWeight: 600, color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+              <div style={{ fontWeight: 700, color: 'var(--primary-navy)', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span>{t('contact.instagram_title', 'Official Account of Trust')}</span>
-                <span style={{ fontSize: '0.72rem', backgroundColor: 'rgba(225, 48, 108, 0.1)', color: '#e1306c', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 700 }}>
+                <span style={{ fontSize: '0.72rem', backgroundColor: 'rgba(225, 48, 108, 0.12)', color: '#e1306c', padding: '0.15rem 0.55rem', borderRadius: '999px', fontWeight: 800, border: '1px solid rgba(225, 48, 108, 0.2)' }}>
                   {t('contact.follow_updates', 'Follow for Updates')}
                 </span>
               </div>
-              <div style={{ color: 'var(--accent-teal-dark)', wordBreak: 'break-word', fontWeight: 600, fontSize: '0.92rem', marginTop: '0.15rem' }}>
+              <div style={{ color: '#e1306c', wordBreak: 'break-word', fontWeight: 700, fontSize: '0.92rem', marginTop: '0.2rem' }}>
                 @shri.vishwanathrao.patil_trust ↗
               </div>
             </div>
@@ -140,7 +240,7 @@ export default function ContactPage() {
 
       {/* Enquiry Form */}
       <div className="form-card" style={{ width: '100%', margin: '0' }}>
-        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', marginBottom: '1.5rem', color: 'var(--text-dark)' }}>
+        <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.9rem)', marginBottom: '1.5rem', color: 'var(--primary-navy)', fontWeight: 800, fontFamily: 'var(--font-title)', letterSpacing: '-0.02em' }}>
           {t('contact.form_title', 'Send Message')}
         </h2>
 

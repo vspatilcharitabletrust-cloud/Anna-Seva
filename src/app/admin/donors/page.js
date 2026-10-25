@@ -8,6 +8,19 @@ export default function AdminDonorsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [revealedPasswords, setRevealedPasswords] = useState({});
+  const [copiedId, setCopiedId] = useState(null);
+
+  const togglePassword = (id) => {
+    setRevealedPasswords((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const copyPassword = (id, pass) => {
+    if (!pass) return;
+    navigator.clipboard.writeText(pass);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   useEffect(() => {
     fetchDonors();
@@ -145,6 +158,7 @@ export default function AdminDonorsPage() {
                 <th style={{ width: '60px' }}>S.NO</th>
                 <th>Donor Name</th>
                 <th>Email Address</th>
+                <th>Password</th>
                 <th>Mobile Number</th>
                 <th>Address</th>
                 <th>State Name</th>
@@ -160,6 +174,54 @@ export default function AdminDonorsPage() {
                   <td>{index + 1}</td>
                   <td style={{ fontWeight: 600, color: '#1a7ff7' }}>{donor.name}</td>
                   <td>{donor.email}</td>
+                  <td>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', backgroundColor: '#f8fafc', padding: '0.25rem 0.5rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                      <span style={{
+                        fontFamily: 'monospace',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        color: revealedPasswords[donor.id] ? '#0f766e' : '#64748b',
+                        letterSpacing: revealedPasswords[donor.id] ? 'normal' : '2px',
+                        minWidth: '85px',
+                        display: 'inline-block'
+                      }}>
+                        {revealedPasswords[donor.id] ? (donor.password || 'Hriday@1234') : '••••••••'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => togglePassword(donor.id)}
+                        title={revealedPasswords[donor.id] ? "Hide password" : "Show password"}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: '0 2px',
+                          fontSize: '0.9rem',
+                          lineHeight: 1
+                        }}
+                      >
+                        {revealedPasswords[donor.id] ? '🙈' : '👁️'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => copyPassword(donor.id, donor.password || 'Hriday@1234')}
+                        title="Copy password to clipboard"
+                        style={{
+                          background: copiedId === donor.id ? '#0d9488' : '#ffffff',
+                          color: copiedId === donor.id ? '#ffffff' : '#475569',
+                          border: '1px solid #cbd5e1',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.72rem',
+                          padding: '0.15rem 0.4rem',
+                          fontWeight: 600,
+                          transition: 'all 0.15s'
+                        }}
+                      >
+                        {copiedId === donor.id ? '✓' : 'Copy'}
+                      </button>
+                    </div>
+                  </td>
                   <td>{donor.mobile || 'N/A'}</td>
                   <td>{donor.address || 'N/A'}</td>
                   <td>{donor.state_name || 'N/A'}</td>

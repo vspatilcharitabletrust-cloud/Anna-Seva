@@ -862,6 +862,29 @@ h6 {
   background-color: #06b6d4;
 }
 
+.status-badge.pending_approval,
+.status-badge.pledged {
+  background-color: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.status-badge.pending_approval::before,
+.status-badge.pledged::before {
+  background-color: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.status-badge.conducted {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.status-badge.conducted::before {
+  background-color: #2563eb;
+}
+
 /* Buttons in panels */
 .action-btn {
   padding: 0.5rem 1.1rem;

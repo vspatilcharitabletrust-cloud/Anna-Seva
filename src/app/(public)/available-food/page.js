@@ -8,6 +8,23 @@ export default function AvailableFoodPage() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedListing, setSelectedListing] = useState(null);
+  const [photoViewer, setPhotoViewer] = useState(null); // { photos: [], activeIndex: 0, title: '', location: '' }
+
+  // Keyboard navigation for photo gallery
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!photoViewer) return;
+      if (e.key === 'Escape') setPhotoViewer(null);
+      if (e.key === 'ArrowRight' && photoViewer.photos.length > 1) {
+        setPhotoViewer((prev) => prev ? { ...prev, activeIndex: (prev.activeIndex + 1) % prev.photos.length } : null);
+      }
+      if (e.key === 'ArrowLeft' && photoViewer.photos.length > 1) {
+        setPhotoViewer((prev) => prev ? { ...prev, activeIndex: (prev.activeIndex - 1 + prev.photos.length) % prev.photos.length } : null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [photoViewer]);
   
   // Filter states
   const [filterStateId, setFilterStateId] = useState('');
@@ -293,7 +310,82 @@ export default function AvailableFoodPage() {
                         <div style={{ fontWeight: 700, color: 'var(--primary-navy)' }}>{listing.contact_person}</div>
                         <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>{listing.mobile}</div>
                       </td>
-                      <td style={{ fontWeight: 600, color: 'var(--primary-navy)' }}>{listing.food_items}</td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                          {listing.photos && listing.photos.length > 0 && (
+                            <div
+                              onClick={() => setPhotoViewer({
+                                photos: listing.photos,
+                                activeIndex: 0,
+                                title: listing.food_items,
+                                location: `${listing.city_name}, ${listing.state_name}`
+                              })}
+                              style={{ position: 'relative', cursor: 'pointer', flexShrink: 0 }}
+                              title="Click to view food photos"
+                            >
+                              <img
+                                src={listing.photos[0]}
+                                alt={listing.food_items}
+                                style={{
+                                  width: '44px',
+                                  height: '44px',
+                                  borderRadius: '10px',
+                                  objectFit: 'cover',
+                                  border: '2px solid rgba(13, 148, 136, 0.35)',
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                                  transition: 'transform 0.2s ease',
+                                  backgroundColor: '#f8fafc'
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                              />
+                              <span style={{
+                                position: 'absolute',
+                                bottom: '-4px',
+                                right: '-4px',
+                                backgroundColor: 'var(--primary-navy)',
+                                color: '#ffffff',
+                                fontSize: '0.62rem',
+                                fontWeight: 800,
+                                padding: '0.1rem 0.35rem',
+                                borderRadius: '50px',
+                                border: '1.5px solid #ffffff'
+                              }}>
+                                📸 {listing.photos.length}
+                              </span>
+                            </div>
+                          )}
+                          <div>
+                            <div style={{ fontWeight: 600, color: 'var(--primary-navy)' }}>{listing.food_items}</div>
+                            {listing.photos && listing.photos.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => setPhotoViewer({
+                                  photos: listing.photos,
+                                  activeIndex: 0,
+                                  title: listing.food_items,
+                                  location: `${listing.city_name}, ${listing.state_name}`
+                                })}
+                                style={{
+                                  background: 'none',
+                                  border: 'none',
+                                  color: 'var(--accent-teal)',
+                                  fontSize: '0.74rem',
+                                  fontWeight: 700,
+                                  padding: 0,
+                                  cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.2rem',
+                                  marginTop: '0.15rem'
+                                }}
+                              >
+                                <span>🔍</span> View {listing.photos.length} {listing.photos.length === 1 ? 'Photo' : 'Photos'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </td>
                       <td style={{ fontSize: '0.85rem', lineHeight: '1.4', maxWidth: '220px' }}>{listing.address}</td>
                       <td>
                         <div style={{ fontWeight: 600 }}>{listing.city_name}</div>
@@ -383,6 +475,61 @@ export default function AvailableFoodPage() {
                     <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--primary-navy)', marginBottom: '0.25rem' }}>
                       {listing.food_items}
                     </h3>
+                    
+                    {/* Mobile Photos Strip */}
+                    {listing.photos && listing.photos.length > 0 && (
+                      <div style={{ display: 'flex', gap: '0.45rem', margin: '0.45rem 0', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+                        {listing.photos.map((p, pIdx) => (
+                          <img
+                            key={pIdx}
+                            src={p}
+                            alt={`${listing.food_items} ${pIdx + 1}`}
+                            onClick={() => setPhotoViewer({
+                              photos: listing.photos,
+                              activeIndex: pIdx,
+                              title: listing.food_items,
+                              location: `${listing.city_name}, ${listing.state_name}`
+                            })}
+                            style={{
+                              width: '52px',
+                              height: '52px',
+                              borderRadius: '8px',
+                              objectFit: 'cover',
+                              border: '1.5px solid rgba(13, 148, 136, 0.3)',
+                              cursor: 'pointer',
+                              flexShrink: 0
+                            }}
+                          />
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setPhotoViewer({
+                            photos: listing.photos,
+                            activeIndex: 0,
+                            title: listing.food_items,
+                            location: `${listing.city_name}, ${listing.state_name}`
+                          })}
+                          style={{
+                            height: '52px',
+                            padding: '0 0.6rem',
+                            borderRadius: '8px',
+                            border: '1px dashed var(--accent-teal)',
+                            backgroundColor: 'rgba(13, 148, 136, 0.08)',
+                            color: 'var(--accent-teal-dark)',
+                            fontSize: '0.72rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                            flexShrink: 0
+                          }}
+                        >
+                          📸 View All ({listing.photos.length})
+                        </button>
+                      </div>
+                    )}
+
                     <div style={{ fontSize: '0.85rem', color: '#475569', lineHeight: '1.4' }}>
                       <strong>Address:</strong> {listing.address}
                     </div>
@@ -469,6 +616,40 @@ export default function AvailableFoodPage() {
               <div style={{ gridColumn: 'span 2' }}><strong>{t('food.modal_address', 'Address:')}</strong> {selectedListing.address}</div>
               {selectedListing.description && (
                 <div style={{ gridColumn: 'span 2' }}><strong>{t('food.modal_info', 'Additional Info:')}</strong> {selectedListing.description}</div>
+              )}
+              {selectedListing.photos && selectedListing.photos.length > 0 && (
+                <div style={{ gridColumn: 'span 2', marginTop: '0.25rem' }}>
+                  <strong style={{ display: 'block', marginBottom: '0.45rem', color: 'var(--primary-navy)', fontSize: '0.9rem' }}>
+                    📸 Food Photos ({selectedListing.photos.length}):
+                  </strong>
+                  <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+                    {selectedListing.photos.map((p, pIdx) => (
+                      <img
+                        key={pIdx}
+                        src={p}
+                        alt={`Food photo ${pIdx + 1}`}
+                        onClick={() => setPhotoViewer({
+                          photos: selectedListing.photos,
+                          activeIndex: pIdx,
+                          title: selectedListing.food_items,
+                          location: `${selectedListing.city_name}, ${selectedListing.state_name}`
+                        })}
+                        style={{
+                          width: '68px',
+                          height: '68px',
+                          borderRadius: '10px',
+                          objectFit: 'cover',
+                          border: '2px solid rgba(13, 148, 136, 0.4)',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                          transition: 'transform 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                      />
+                    ))}
+                  </div>
+                </div>
               )}
               <div style={{ gridColumn: 'span 2', fontSize: '0.85rem', color: 'var(--text-muted)' }}><strong>{t('food.modal_listed_on', 'Listed On:')}</strong> {selectedListing.created_at}</div>
             </div>
@@ -604,6 +785,221 @@ export default function AvailableFoodPage() {
                 {submitting ? t('food.modal_submitting', 'Submitting Allocation Request...') : t('food.modal_confirm_btn', 'Confirm Allocation Claim')}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Public Photo Lightbox Modal */}
+      {photoViewer && (
+        <div
+          className="modal-overlay"
+          onClick={() => setPhotoViewer(null)}
+          style={{
+            backgroundColor: 'rgba(9, 14, 26, 0.92)',
+            backdropFilter: 'blur(12px)',
+            zIndex: 10000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem'
+          }}
+        >
+          <div
+            className="animate-fade-in"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '850px',
+              width: '100%',
+              backgroundColor: '#0f172a',
+              borderRadius: '20px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {/* Lightbox Header */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '1rem 1.5rem',
+              backgroundColor: 'rgba(15, 23, 42, 0.8)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <div>
+                <div style={{ color: '#ffffff', fontWeight: 800, fontSize: '1.15rem' }}>
+                  {photoViewer.title}
+                </div>
+                {photoViewer.location && (
+                  <div style={{ color: 'var(--accent-teal)', fontSize: '0.82rem', marginTop: '0.15rem', fontWeight: 600 }}>
+                    📍 {photoViewer.location}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  padding: '0.25rem 0.65rem',
+                  borderRadius: '50px'
+                }}>
+                  {photoViewer.activeIndex + 1} / {photoViewer.photos.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPhotoViewer(null)}
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#ffffff',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.2rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.8)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'; }}
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Main Stage with Navigation */}
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '380px',
+              maxHeight: '62vh',
+              backgroundColor: '#090e1a',
+              overflow: 'hidden'
+            }}>
+              <img
+                src={photoViewer.photos[photoViewer.activeIndex]}
+                alt={`${photoViewer.title} photo ${photoViewer.activeIndex + 1}`}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '62vh',
+                  objectFit: 'contain',
+                  display: 'block',
+                  transition: 'opacity 0.25s ease'
+                }}
+              />
+
+              {/* Prev Button */}
+              {photoViewer.photos.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setPhotoViewer((prev) => ({
+                    ...prev,
+                    activeIndex: (prev.activeIndex - 1 + prev.photos.length) % prev.photos.length
+                  }))}
+                  style={{
+                    position: 'absolute',
+                    left: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                    backdropFilter: 'blur(6px)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    fontSize: '1.6rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--accent-teal)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.75)'; }}
+                >
+                  ‹
+                </button>
+              )}
+
+              {/* Next Button */}
+              {photoViewer.photos.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setPhotoViewer((prev) => ({
+                    ...prev,
+                    activeIndex: (prev.activeIndex + 1) % prev.photos.length
+                  }))}
+                  style={{
+                    position: 'absolute',
+                    right: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                    backdropFilter: 'blur(6px)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    fontSize: '1.6rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--accent-teal)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.75)'; }}
+                >
+                  ›
+                </button>
+              )}
+            </div>
+
+            {/* Thumbnail Navigation Strip */}
+            {photoViewer.photos.length > 1 && (
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.65rem',
+                padding: '0.9rem',
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                {photoViewer.photos.map((p, idx) => (
+                  <img
+                    key={idx}
+                    src={p}
+                    alt={`Thumbnail ${idx + 1}`}
+                    onClick={() => setPhotoViewer((prev) => ({ ...prev, activeIndex: idx }))}
+                    style={{
+                      width: '50px',
+                      height: '50px',
+                      borderRadius: '8px',
+                      objectFit: 'cover',
+                      cursor: 'pointer',
+                      border: idx === photoViewer.activeIndex ? '2.5px solid var(--accent-teal)' : '1.5px solid rgba(255, 255, 255, 0.25)',
+                      opacity: idx === photoViewer.activeIndex ? 1 : 0.6,
+                      transform: idx === photoViewer.activeIndex ? 'scale(1.08)' : 'scale(1)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -12,6 +12,22 @@ export async function GET(request) {
 
     const session = await getSession();
 
+    const formatListingsWithPhotos = (rawListings) => {
+      return (rawListings || []).map((l) => {
+        let photos = [];
+        try {
+          if (Array.isArray(l.photos)) {
+            photos = l.photos;
+          } else if (typeof l.photos === 'string' && l.photos.trim()) {
+            photos = JSON.parse(l.photos);
+          }
+        } catch (e) {
+          photos = [];
+        }
+        return { ...l, photos: Array.isArray(photos) ? photos : [] };
+      });
+    };
+
     if (myListings) {
       if (!session || session.role !== 'donor') {
         return Response.json({ error: 'Unauthorized' }, { status: 403 });
@@ -27,7 +43,7 @@ export async function GET(request) {
         ORDER BY f.created_at DESC
       `, [session.id]);
 
-      return Response.json(listings);
+      return Response.json(formatListingsWithPhotos(listings));
     }
 
     // Otherwise, fetch general listings (public search or admin list)
@@ -72,7 +88,7 @@ export async function GET(request) {
     sql += ' ORDER BY f.created_at DESC';
 
     const listings = await query.all(sql, params);
-    return Response.json(listings);
+    return Response.json(formatListingsWithPhotos(listings));
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
@@ -81,20 +97,67 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const session = await getSession();
-    if (!session || session.role !== 'donor') {
-      return Response.json({ error: 'Only logged-in donors can list food' }, { status: 403 });
+    if (!session || (session.role !== 'donor' && session.role !== 'admin')) {
+      return Response.json({ error: 'Only logged-in donors or admins can list food' }, { status: 403 });
     }
 
-    const { contact_person, mobile, food_items, description, address, state_id, city_id } = await request.json();
+    const { 
+      donor_id,
+      contact_person, 
+      mobile, 
+      food_items, 
+      description, 
+      address, 
+      state_id, 
+      city_id, 
+      photos,
+      status: customStatus,
+      created_at: customCreatedAt
+    } = await request.json();
+
+    let targetDonorId = session.id;
+    if (session.role === 'admin') {
+      if (!donor_id) {
+        return Response.json({ error: 'Please select a registered donor for this listing' }, { status: 400 });
+      }
+      targetDonorId = donor_id;
+    }
 
     if (!contact_person || !mobile || !food_items || !address || !state_id || !city_id) {
       return Response.json({ error: 'All fields except description are required' }, { status: 400 });
     }
 
-    const result = await query.run(`
-      INSERT INTO food_listings (donor_id, contact_person, mobile, food_items, description, address, state_id, city_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'available')
-    `, [session.id, contact_person, mobile, food_items, description || null, address, state_id, city_id]);
+    let photosJson = null;
+    if (Array.isArray(photos)) {
+      photosJson = JSON.stringify(photos.slice(0, 5));
+    } else if (typeof photos === 'string' && photos.trim()) {
+      photosJson = photos;
+    }
+
+    const listingStatus = customStatus || 'available';
+
+    // Handle back-dated created_at
+    let createdAtValue = null;
+    if (customCreatedAt) {
+      const d = new Date(customCreatedAt);
+      if (!isNaN(d.getTime())) {
+        const pad = (n) => String(n).padStart(2, '0');
+        createdAtValue = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      }
+    }
+
+    let result;
+    if (createdAtValue) {
+      result = await query.run(`
+        INSERT INTO food_listings (donor_id, contact_person, mobile, food_items, description, address, state_id, city_id, status, photos, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `, [targetDonorId, contact_person, mobile, food_items, description || null, address, state_id, city_id, listingStatus, photosJson, createdAtValue]);
+    } else {
+      result = await query.run(`
+        INSERT INTO food_listings (donor_id, contact_person, mobile, food_items, description, address, state_id, city_id, status, photos)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `, [targetDonorId, contact_person, mobile, food_items, description || null, address, state_id, city_id, listingStatus, photosJson]);
+    }
 
     return Response.json({ success: true, id: result.lastInsertRowid });
   } catch (error) {
@@ -109,7 +172,7 @@ export async function PUT(request) {
       return Response.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    const { id, status, food_items, contact_person, mobile, address, description, state_id, city_id } = await request.json();
+    const { id, status, food_items, contact_person, mobile, address, description, state_id, city_id, photos } = await request.json();
 
     if (!id) {
       return Response.json({ error: 'Listing ID is required' }, { status: 400 });
@@ -125,13 +188,23 @@ export async function PUT(request) {
       return Response.json({ error: 'Unauthorized to edit this listing' }, { status: 403 });
     }
 
-    if (food_items || contact_person || mobile) {
+    let photosJson = undefined;
+    if (photos !== undefined) {
+      if (Array.isArray(photos)) {
+        photosJson = JSON.stringify(photos.slice(0, 5));
+      } else if (typeof photos === 'string') {
+        photosJson = photos;
+      }
+    }
+
+    if (food_items || contact_person || mobile || photos !== undefined) {
+      const finalPhotos = photosJson !== undefined ? photosJson : listing.photos;
       // General edit (can also update status if provided)
       await query.run(`
         UPDATE food_listings 
-        SET contact_person = ?, mobile = ?, food_items = ?, description = ?, address = ?, state_id = ?, city_id = ?, status = ?
+        SET contact_person = ?, mobile = ?, food_items = ?, description = ?, address = ?, state_id = ?, city_id = ?, status = ?, photos = ?
         WHERE id = ?
-      `, [contact_person, mobile, food_items, description || null, address, state_id, city_id, status || listing.status, id]);
+      `, [contact_person || listing.contact_person, mobile || listing.mobile, food_items || listing.food_items, description !== undefined ? description : listing.description, address || listing.address, state_id || listing.state_id, city_id || listing.city_id, status || listing.status, finalPhotos, id]);
     } else if (status) {
       // Status-only update
       await query.run('UPDATE food_listings SET status = ? WHERE id = ?', [status, id]);

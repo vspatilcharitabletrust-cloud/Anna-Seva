@@ -9,7 +9,9 @@ export async function GET() {
     }
 
     const donors = await query.all(`
-      SELECT u.id, u.name, u.email, u.mobile, u.address, s.name as state_name, c.name as city_name, u.status, u.created_at
+      SELECT u.id, u.name, u.email, u.mobile, u.address, u.state_id, u.city_id,
+             s.name as state_name, c.name as city_name, u.status, u.created_at,
+             COALESCE(u.plain_password, 'Hriday@1234') as password
       FROM users u
       LEFT JOIN states s ON u.state_id = s.id
       LEFT JOIN cities c ON u.city_id = c.id

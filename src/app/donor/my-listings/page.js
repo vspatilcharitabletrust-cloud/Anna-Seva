@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import FoodPhotoUploader from '@/components/FoodPhotoUploader';
 
 export default function DonorMyListingsPage() {
   const [listings, setListings] = useState([]);
@@ -43,7 +44,7 @@ export default function DonorMyListingsPage() {
   };
 
   const handleEditClick = async (listing) => {
-    setEditForm({ ...listing });
+    setEditForm({ ...listing, photos: Array.isArray(listing.photos) ? [...listing.photos] : [] });
     setEditError('');
     setEditSuccess('');
     
@@ -144,7 +145,32 @@ export default function DonorMyListingsPage() {
               {listings.map((l, index) => (
                 <tr key={l.id}>
                   <td>{index + 1}</td>
-                  <td style={{ fontWeight: 600, color: '#14b8a6' }}>{l.food_items}</td>
+                  <td>
+                    {l.photos && l.photos.length > 0 ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <img
+                          src={l.photos[0]}
+                          alt={l.food_items}
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '8px',
+                            objectFit: 'cover',
+                            border: '1px solid var(--border-light)',
+                            flexShrink: 0
+                          }}
+                        />
+                        <div>
+                          <div style={{ fontWeight: 600, color: '#14b8a6' }}>{l.food_items}</div>
+                          <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                            📸 {l.photos.length} {l.photos.length === 1 ? 'photo' : 'photos'}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <span style={{ fontWeight: 600, color: '#14b8a6' }}>{l.food_items}</span>
+                    )}
+                  </td>
                   <td>{l.contact_person} ({l.mobile})</td>
                   <td>{l.address}</td>
                   <td>{l.city_name}, {l.state_name}</td>
@@ -289,6 +315,12 @@ export default function DonorMyListingsPage() {
                   required
                 />
               </div>
+
+              <FoodPhotoUploader
+                photos={editForm.photos || []}
+                onChange={(newPhotos) => setEditForm((prev) => ({ ...prev, photos: newPhotos }))}
+                maxPhotos={5}
+              />
 
               <button
                 type="submit"

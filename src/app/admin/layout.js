@@ -62,6 +62,11 @@ export default async function AdminLayout({ children }) {
             </Link>
           </li>
           <li className="sidebar-item">
+            <Link href="/admin/sankalp" className="sidebar-link">
+              🎂 Annadan Sankalp
+            </Link>
+          </li>
+          <li className="sidebar-item">
             <Link href="/admin/requests" className="sidebar-link">
               ✉ Food Requests
             </Link>

@@ -184,6 +184,97 @@ export default function HomePageClient({ donorCount, foodCount, completedCount }
         </div>
       </section>
 
+      {/* Annadan Sankalp Commemorative Dedications Banner */}
+      <section style={{
+        background: 'linear-gradient(135deg, #042f2e 0%, #134e4a 50%, #0f172a 100%)',
+        color: '#ffffff',
+        padding: '4.5rem 1.5rem',
+        borderBottom: '1px solid var(--border-light)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ maxWidth: '1080px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1.25rem' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.4rem 1.25rem',
+            borderRadius: '50px',
+            background: 'rgba(255, 255, 255, 0.12)',
+            border: '1.5px solid rgba(255, 255, 255, 0.25)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+          }}>
+            <span style={{ fontSize: '1rem' }}>🎂</span>
+            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#5eead4', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              ANNADAN SANKALP • स्मृतीदिन व वाढदिवस अन्नदान
+            </span>
+          </div>
+
+          <h2 style={{ fontSize: 'clamp(1.9rem, 4vw, 2.7rem)', fontFamily: 'var(--font-title)', fontWeight: 800, margin: 0, color: '#ffffff', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+            Commemorate Life’s Auspicious Occasions with the Gift of Food
+          </h2>
+
+          <p style={{ color: '#ccfbf1', fontSize: '1.1rem', maxWidth: '780px', margin: 0, lineHeight: 1.65 }}>
+            Dedicate food drives on <strong>Birthdays, Wedding Anniversaries, or in Sacred Memory of Loved Ones (स्मृतीदिन)</strong>. Receive a branded <strong>Digital Commemorative Certificate</strong>, verified drive photos, and WhatsApp updates.
+          </p>
+
+          <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', justifyContent: 'center', margin: '0.75rem 0' }}>
+            <span style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.45rem 1rem', borderRadius: '50px', fontSize: '0.88rem', fontWeight: 600, color: '#ffffff' }}>
+              🎂 Birthday Blessings
+            </span>
+            <span style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.45rem 1rem', borderRadius: '50px', fontSize: '0.88rem', fontWeight: 600, color: '#ffffff' }}>
+              💍 Anniversary Feasts
+            </span>
+            <span style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.45rem 1rem', borderRadius: '50px', fontSize: '0.88rem', fontWeight: 600, color: '#ffffff' }}>
+              🕊️ Smrutidin Memorial Meal Drives
+            </span>
+            <span style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.45rem 1rem', borderRadius: '50px', fontSize: '0.88rem', fontWeight: 600, color: '#ffffff' }}>
+              📜 Branded Digital Certificate
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0.5rem' }}>
+            <Link
+              href="/annadan-sankalp"
+              style={{
+                background: '#0d9488',
+                color: '#ffffff',
+                padding: '0.85rem 2rem',
+                borderRadius: '50px',
+                fontWeight: 800,
+                fontSize: '1rem',
+                textDecoration: 'none',
+                boxShadow: '0 6px 20px rgba(13, 148, 136, 0.4)',
+                transition: 'transform 0.2s',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <span>🎂</span>
+              <span>Schedule an Annadan Sankalp →</span>
+            </Link>
+
+            <Link
+              href="/annadan-sankalp"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
+                padding: '0.85rem 1.75rem',
+                borderRadius: '50px',
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                textDecoration: 'none',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                transition: 'background 0.2s'
+              }}
+            >
+              📜 View Wall of Blessings
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Core Mission Callout */}
       <section style={{ padding: '5.5rem 2rem', borderBottom: '1px solid var(--border-light)', backgroundColor: '#ffffff' }}>
         <div style={{ maxWidth: '1080px', margin: '0 auto' }}>

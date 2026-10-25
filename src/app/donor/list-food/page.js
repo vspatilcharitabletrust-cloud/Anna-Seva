@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import FoodPhotoUploader from '@/components/FoodPhotoUploader';
 
 export default function DonorListFoodPage() {
   const router = useRouter();
@@ -12,7 +13,8 @@ export default function DonorListFoodPage() {
     description: '',
     address: '',
     state_id: '',
-    city_id: ''
+    city_id: '',
+    photos: []
   });
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -94,7 +96,8 @@ export default function DonorListFoodPage() {
         setFormData((prev) => ({
           ...prev,
           food_items: '',
-          description: ''
+          description: '',
+          photos: []
         }));
         setTimeout(() => {
           router.push('/donor/my-listings');
@@ -221,7 +224,7 @@ export default function DonorListFoodPage() {
             </div>
           </div>
 
-          <div className="form-group" style={{ marginBottom: '2rem' }}>
+          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
             <label htmlFor="address">Collection Address</label>
             <input
               type="text"
@@ -234,6 +237,12 @@ export default function DonorListFoodPage() {
               placeholder="Address where food is located"
             />
           </div>
+
+          <FoodPhotoUploader
+            photos={formData.photos || []}
+            onChange={(newPhotos) => setFormData((prev) => ({ ...prev, photos: newPhotos }))}
+            maxPhotos={5}
+          />
 
           <button
             type="submit"

@@ -52,6 +52,11 @@ export default async function DonorLayout({ children }) {
             </Link>
           </li>
           <li className="sidebar-item">
+            <Link href="/donor/sankalp" className="sidebar-link">
+              🎂 Annadan Sankalp
+            </Link>
+          </li>
+          <li className="sidebar-item">
             <Link href="/donor/my-requests" className="sidebar-link">
               ✉ My Food Requests
             </Link>

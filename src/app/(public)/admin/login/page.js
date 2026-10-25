@@ -27,8 +27,7 @@ export default function AdminLoginPage() {
       const data = await res.json();
       if (res.ok) {
         if (data.user.role === 'admin') {
-          router.push('/admin/dashboard');
-          router.refresh();
+          window.location.href = '/admin/dashboard';
         } else {
           setError('Access Denied: You are not authorized as Admin.');
           // Log them out to clear session

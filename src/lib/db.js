@@ -130,7 +130,8 @@ export const query = {
       const res = await pgPool.query(pgSql, params);
       return res.rows;
     } else {
-      return db.prepare(sql).all(...params);
+      const rows = db.prepare(sql).all(...params);
+      return Array.isArray(rows) ? rows.map(r => ({ ...r })) : [];
     }
   },
 
@@ -141,7 +142,8 @@ export const query = {
       const res = await pgPool.query(pgSql, params);
       return res.rows[0] || null;
     } else {
-      return db.prepare(sql).get(...params);
+      const row = db.prepare(sql).get(...params);
+      return row ? { ...row } : null;
     }
   },
 
@@ -266,6 +268,7 @@ async function initPostgresDB() {
       state_id INTEGER REFERENCES states(id) ON DELETE SET NULL,
       city_id INTEGER REFERENCES cities(id) ON DELETE SET NULL,
       status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'approved', 'rejected')),
+      plain_password VARCHAR(255),
       reset_token VARCHAR(255),
       reset_token_expiry TIMESTAMP WITH TIME ZONE,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
@@ -273,6 +276,7 @@ async function initPostgresDB() {
   `);
 
   try {
+    await pgPool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS plain_password VARCHAR(255)');
     await pgPool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255)');
     await pgPool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expiry TIMESTAMP WITH TIME ZONE');
   } catch (e) {
@@ -291,9 +295,16 @@ async function initPostgresDB() {
       state_id INTEGER NOT NULL REFERENCES states(id) ON DELETE CASCADE,
       city_id INTEGER NOT NULL REFERENCES cities(id) ON DELETE CASCADE,
       status VARCHAR(50) NOT NULL DEFAULT 'available' CHECK(status IN ('available', 'claimed', 'expired', 'approved')),
+      photos TEXT,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     );
   `);
+
+  try {
+    await pgPool.query('ALTER TABLE food_listings ADD COLUMN IF NOT EXISTS photos TEXT');
+  } catch (e) {
+    console.log('[Anna Seva] PostgreSQL food_listings photos alter skipped or already applied:', e.message);
+  }
 
   await pgPool.query(`
     CREATE TABLE IF NOT EXISTS requests (
@@ -332,13 +343,47 @@ async function initPostgresDB() {
     );
   `);
 
+  await pgPool.query(`
+    CREATE TABLE IF NOT EXISTS annadan_sankalps (
+      id SERIAL PRIMARY KEY,
+      donor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      donor_name VARCHAR(255) NOT NULL,
+      donor_email VARCHAR(255) NOT NULL,
+      donor_mobile VARCHAR(25) NOT NULL,
+      occasion_type VARCHAR(50) NOT NULL,
+      honoree_name VARCHAR(255) NOT NULL,
+      honoree_relation VARCHAR(100),
+      honoree_photo TEXT,
+      event_date DATE NOT NULL,
+      meals_target INTEGER NOT NULL DEFAULT 50,
+      meal_type VARCHAR(100) DEFAULT 'Festive Thali & Sweets',
+      state_id INTEGER REFERENCES states(id) ON DELETE SET NULL,
+      city_id INTEGER REFERENCES cities(id) ON DELETE SET NULL,
+      preferred_beneficiary VARCHAR(150),
+      dedication_message TEXT NOT NULL,
+      status VARCHAR(50) NOT NULL DEFAULT 'pledged',
+      conducted_date DATE,
+      meals_served INTEGER,
+      drive_location_name VARCHAR(255),
+      drive_photos TEXT,
+      certificate_code VARCHAR(100) UNIQUE NOT NULL,
+      whatsapp_sent INTEGER NOT NULL DEFAULT 0,
+      email_sent INTEGER NOT NULL DEFAULT 0,
+      created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    );
+  `);
+
   // --- SEED DATA ---
   const adminCheck = await pgPool.query("SELECT id FROM users WHERE role = 'admin'");
   if (adminCheck.rows.length === 0) {
     await pgPool.query(
-      "INSERT INTO users (name, email, password, role, mobile, address, status) VALUES ($1, $2, $3, 'admin', '9999999999', 'Admin HQ, New Delhi', 'approved')",
+      "INSERT INTO users (name, email, password, plain_password, role, mobile, address, status) VALUES ($1, $2, $3, 'Hriday@1234', 'admin', '9999999999', 'Admin HQ, New Delhi', 'approved')",
       ['System Admin', 'admin@annaseva.org', hashPassword('Hriday@1234')]
     );
+  } else {
+    try {
+      await pgPool.query("UPDATE users SET password = $1, plain_password = 'Hriday@1234', status = 'approved' WHERE role = 'admin'", [hashPassword('Hriday@1234')]);
+    } catch (e) {}
   }
 
   const pagesCheck = await pgPool.query("SELECT id FROM pages WHERE id = 'main'");
@@ -444,15 +489,20 @@ async function initPostgresDB() {
 
     if (mh && pune && latur) {
       await pgPool.query(`
-        INSERT INTO users (name, email, password, role, mobile, address, state_id, city_id, status)
-        VALUES ($1, $2, $3, 'donor', $4, $5, $6, $7, 'approved')
+        INSERT INTO users (name, email, password, plain_password, role, mobile, address, state_id, city_id, status)
+        VALUES ($1, $2, $3, 'Hriday@1234', 'donor', $4, $5, $6, $7, 'approved')
       `, ['Hridaynath Patil', 'hriday@donor.com', hashPassword('Hriday@1234'), '7666484077', 'Vanaz Metro Station, Kothrud', mh, pune]);
 
       await pgPool.query(`
-        INSERT INTO users (name, email, password, role, mobile, address, state_id, city_id, status)
-        VALUES ($1, $2, $3, 'donor', $4, $5, $6, $7, 'approved')
+        INSERT INTO users (name, email, password, plain_password, role, mobile, address, state_id, city_id, status)
+        VALUES ($1, $2, $3, 'Hriday@1234', 'donor', $4, $5, $6, $7, 'approved')
       `, ['Bhagwat Patil', 'bhagwat@donor.com', hashPassword('Hriday@1234'), '9420434447', 'Matoshree Empire, Latur', mh, latur]);
     }
+  } else {
+    try {
+      await pgPool.query("UPDATE users SET password = $1, plain_password = 'Hriday@1234', status = 'approved' WHERE email = 'hriday@donor.com'", [hashPassword('Hriday@1234')]);
+      await pgPool.query("UPDATE users SET password = $1, plain_password = 'Hriday@1234', status = 'approved' WHERE email = 'bhagwat@donor.com'", [hashPassword('Hriday@1234')]);
+    } catch (e) {}
   }
 
   // Seed Food Listings
@@ -553,6 +603,40 @@ async function initPostgresDB() {
       VALUES ($1, $2, $3, $4, 'new', $5)
     `, ['Amit Sharma', 'amit@gmail.com', '9898989898', 'I would like to volunteer as a delivery partner in Mumbai.', new Date('2026-06-03 14:00:00')]);
   }
+
+  // Seed Annadan Sankalps (Commemorative Meal Dedications)
+  const sankalpCountRes = await pgPool.query('SELECT COUNT(*) as count FROM annadan_sankalps');
+  const sankalpCount = parseInt(sankalpCountRes.rows[0].count, 10);
+  if (sankalpCount === 0) {
+    const hridayRes = await pgPool.query("SELECT id FROM users WHERE email = 'hriday@donor.com'");
+    const bhagwatRes = await pgPool.query("SELECT id FROM users WHERE email = 'bhagwat@donor.com'");
+    const hridayId = hridayRes.rows[0]?.id;
+    const bhagwatId = bhagwatRes.rows[0]?.id;
+
+    const mhRes = await pgPool.query("SELECT id FROM states WHERE name = 'Maharashtra'");
+    const puneRes = await pgPool.query("SELECT id FROM cities WHERE name = 'Pune'");
+    const laturRes = await pgPool.query("SELECT id FROM cities WHERE name = 'Latur'");
+
+    const mh = mhRes.rows[0]?.id;
+    const pune = puneRes.rows[0]?.id;
+    const latur = laturRes.rows[0]?.id;
+
+    await pgPool.query(`
+      INSERT INTO annadan_sankalps (
+        donor_id, donor_name, donor_email, donor_mobile, occasion_type, honoree_name, honoree_relation,
+        event_date, meals_target, meal_type, state_id, city_id, preferred_beneficiary,
+        dedication_message, status, conducted_date, meals_served, drive_location_name,
+        certificate_code, whatsapp_sent, email_sent
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, 0, 0)
+    `, [
+      bhagwatId, 'Bhagwat Patil', 'bhagwat@donor.com', '9420434447', 'birthday',
+      'Aarav Patil (चि. आरव - 5वा वाढदिवस)', 'Son', '2026-11-10', 100,
+      'Nutritious Khichdi, Fruits & Sweets', mh, pune, 'Orphanage / Children Shelters',
+      'Praying for long life, great wisdom, and vibrant health for Aarav on his 5th Birthday with nourishing meals for underprivileged children.',
+      'confirmed', null, null, 'Hope Children Home & Orphanage, Pune',
+      'AS-SANKALP-2026-1002'
+    ]);
+  }
 }
 
 // SQLite schemas and seeds
@@ -589,6 +673,7 @@ async function initSQLiteDB() {
       state_id INTEGER,
       city_id INTEGER,
       status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'approved', 'rejected')),
+      plain_password TEXT,
       reset_token TEXT,
       reset_token_expiry TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
@@ -602,6 +687,12 @@ async function initSQLiteDB() {
   } catch (e) {}
   try {
     db.exec("UPDATE users SET status = 'approved' WHERE role = 'admin';");
+  } catch (e) {}
+  try {
+    db.exec("ALTER TABLE users ADD COLUMN plain_password TEXT;");
+  } catch (e) {}
+  try {
+    db.exec("UPDATE users SET plain_password = 'Hriday@1234' WHERE email IN ('hriday@donor.com', 'bhagwat@donor.com');");
   } catch (e) {}
   try {
     db.exec("ALTER TABLE users ADD COLUMN reset_token TEXT;");
@@ -622,12 +713,17 @@ async function initSQLiteDB() {
       state_id INTEGER NOT NULL,
       city_id INTEGER NOT NULL,
       status TEXT NOT NULL DEFAULT 'available' CHECK(status IN ('available', 'claimed', 'expired', 'approved')),
+      photos TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
       FOREIGN KEY(donor_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY(state_id) REFERENCES states(id) ON DELETE CASCADE,
       FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE CASCADE
     );
   `);
+
+  try {
+    db.exec("ALTER TABLE food_listings ADD COLUMN photos TEXT;");
+  } catch (e) {}
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS requests (
@@ -669,13 +765,50 @@ async function initSQLiteDB() {
     );
   `);
 
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS annadan_sankalps (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      donor_id INTEGER,
+      donor_name TEXT NOT NULL,
+      donor_email TEXT NOT NULL,
+      donor_mobile TEXT NOT NULL,
+      occasion_type TEXT NOT NULL,
+      honoree_name TEXT NOT NULL,
+      honoree_relation TEXT,
+      honoree_photo TEXT,
+      event_date TEXT NOT NULL,
+      meals_target INTEGER NOT NULL DEFAULT 50,
+      meal_type TEXT DEFAULT 'Festive Thali & Sweets',
+      state_id INTEGER,
+      city_id INTEGER,
+      preferred_beneficiary TEXT,
+      dedication_message TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pledged',
+      conducted_date TEXT,
+      meals_served INTEGER,
+      drive_location_name TEXT,
+      drive_photos TEXT,
+      certificate_code TEXT UNIQUE NOT NULL,
+      whatsapp_sent INTEGER NOT NULL DEFAULT 0,
+      email_sent INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
+      FOREIGN KEY(donor_id) REFERENCES users(id) ON DELETE SET NULL,
+      FOREIGN KEY(state_id) REFERENCES states(id) ON DELETE SET NULL,
+      FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE SET NULL
+    );
+  `);
+
   const adminCheck = db.prepare("SELECT id FROM users WHERE role = 'admin'").get();
   if (!adminCheck) {
     const insertAdmin = db.prepare(`
-      INSERT INTO users (name, email, password, role, mobile, address, status)
-      VALUES (?, ?, ?, 'admin', '9999999999', 'Admin HQ, New Delhi', 'approved')
+      INSERT INTO users (name, email, password, plain_password, role, mobile, address, status)
+      VALUES (?, ?, ?, 'Hriday@1234', 'admin', '9999999999', 'Admin HQ, New Delhi', 'approved')
     `);
     insertAdmin.run('System Admin', 'admin@annaseva.org', hashPassword('Hriday@1234'));
+  } else {
+    try {
+      db.prepare("UPDATE users SET password = ?, plain_password = 'Hriday@1234', status = 'approved' WHERE role = 'admin'").run(hashPassword('Hriday@1234'));
+    } catch (e) {}
   }
 
   const pagesCheck = db.prepare("SELECT id FROM pages WHERE id = 'main'").get();
@@ -785,13 +918,18 @@ async function initSQLiteDB() {
 
       if (mh && pune && latur) {
         const insertDonor = db.prepare(`
-          INSERT INTO users (name, email, password, role, mobile, address, state_id, city_id, status)
-          VALUES (?, ?, ?, 'donor', ?, ?, ?, ?, 'approved')
+          INSERT INTO users (name, email, password, plain_password, role, mobile, address, state_id, city_id, status)
+          VALUES (?, ?, ?, 'Hriday@1234', 'donor', ?, ?, ?, ?, 'approved')
         `);
 
         insertDonor.run('Hridaynath Patil', 'hriday@donor.com', hashPassword('Hriday@1234'), '7666484077', 'Vanaz Metro Station, Kothrud', mh, pune);
         insertDonor.run('Bhagwat Patil', 'bhagwat@donor.com', hashPassword('Hriday@1234'), '9420434447', 'Matoshree Empire, Latur', mh, latur);
       }
+    } else {
+      try {
+        db.prepare("UPDATE users SET password = ?, plain_password = 'Hriday@1234', status = 'approved' WHERE email = 'hriday@donor.com'").run(hashPassword('Hriday@1234'));
+        db.prepare("UPDATE users SET password = ?, plain_password = 'Hriday@1234', status = 'approved' WHERE email = 'bhagwat@donor.com'").run(hashPassword('Hriday@1234'));
+      } catch (e) {}
     }
   } catch (e) {
     console.error('Failed to seed donors:', e.message);
@@ -866,6 +1004,47 @@ async function initSQLiteDB() {
     }
   } catch (e) {
     console.error('Failed to seed enquiries:', e.message);
+  }
+
+  // Seed Annadan Sankalps (Commemorative Meal Dedications)
+  try {
+    const sankalpCount = db.prepare('SELECT COUNT(*) as count FROM annadan_sankalps').get()?.count;
+    if (sankalpCount === 0) {
+      const hriday = db.prepare("SELECT id FROM users WHERE email = 'hriday@donor.com'").get()?.id;
+      const bhagwat = db.prepare("SELECT id FROM users WHERE email = 'bhagwat@donor.com'").get()?.id;
+      const mh = db.prepare("SELECT id FROM states WHERE name = 'Maharashtra'").get()?.id;
+      const pune = db.prepare("SELECT id FROM cities WHERE name = 'Pune'").get()?.id;
+      const latur = db.prepare("SELECT id FROM cities WHERE name = 'Latur'").get()?.id;
+
+      const insertSankalp = db.prepare(`
+        INSERT INTO annadan_sankalps (
+          donor_id, donor_name, donor_email, donor_mobile, occasion_type, honoree_name, honoree_relation,
+          event_date, meals_target, meal_type, state_id, city_id, preferred_beneficiary,
+          dedication_message, status, conducted_date, meals_served, drive_location_name,
+          certificate_code, whatsapp_sent, email_sent
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+
+      insertSankalp.run(
+        bhagwat, 'Bhagwat Patil', 'bhagwat@donor.com', '9420434447', 'birthday',
+        'Aarav Patil (चि. आरव - 5वा वाढदिवस)', 'Son', '2026-11-10', 100,
+        'Nutritious Khichdi, Fruits & Sweets', mh, pune, 'Orphanage / Children Shelters',
+        'Praying for long life, great wisdom, and vibrant health for Aarav on his 5th Birthday with nourishing meals for underprivileged children.',
+        'confirmed', null, null, 'Hope Children Home & Orphanage, Pune',
+        'AS-SANKALP-2026-1002', 0, 0
+      );
+
+      insertSankalp.run(
+        hriday, 'Hridaynath Patil', 'hriday@donor.com', '7666484077', 'anniversary',
+        'Smt. & Shri Bhagwat Patil (25वी लग्नगाठ - रौप्य महोत्सव)', 'Parents', '2026-12-04', 150,
+        'Special Festive Meal & Kheer Puri', mh, latur, 'Civil Hospital Patient Relatives',
+        'Heartiest congratulations to beloved Aai & Baba on their 25th Wedding Anniversary. Dedicated in gratitude with wholesome meals.',
+        'pledged', null, null, 'Civil Hospital Food Distribution Drive, Latur',
+        'AS-SANKALP-2026-1003', 0, 0
+      );
+    }
+  } catch (e) {
+    console.error('Failed to seed annadan_sankalps:', e.message);
   }
 }
 

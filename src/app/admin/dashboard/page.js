@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import Link from 'next/link';
+import AdminDonorCredentialsCard from '@/components/AdminDonorCredentialsCard';
 
 export const revalidate = 0; // Fresh metrics on each reload
 
@@ -12,8 +13,11 @@ export default async function AdminDashboardPage() {
     allRequests: 0,
     newRequests: 0,
     rejectedRequests: 0,
-    completedRequests: 0
+    completedRequests: 0,
+    sankalps: 0
   };
+
+  let donors = [];
 
   try {
     stats.states = (await query.get("SELECT COUNT(*) as count FROM states"))?.count || 0;
@@ -24,6 +28,19 @@ export default async function AdminDashboardPage() {
     stats.newRequests = (await query.get("SELECT COUNT(*) as count FROM requests WHERE status = 'new'"))?.count || 0;
     stats.rejectedRequests = (await query.get("SELECT COUNT(*) as count FROM requests WHERE status = 'rejected'"))?.count || 0;
     stats.completedRequests = (await query.get("SELECT COUNT(*) as count FROM requests WHERE status = 'completed'"))?.count || 0;
+    stats.sankalps = (await query.get("SELECT COUNT(*) as count FROM annadan_sankalps"))?.count || 0;
+
+    const rawDonors = await query.all(`
+      SELECT u.id, u.name, u.email, u.mobile, u.address, s.name as state_name, c.name as city_name, u.status, u.created_at,
+             COALESCE(u.plain_password, 'Hriday@1234') as password
+      FROM users u
+      LEFT JOIN states s ON u.state_id = s.id
+      LEFT JOIN cities c ON u.city_id = c.id
+      WHERE u.role = 'donor'
+      ORDER BY u.created_at DESC
+    `);
+
+    donors = (rawDonors || []).map(d => ({ ...d }));
   } catch (e) {
     console.error('Failed to query dashboard stats:', e);
   }
@@ -107,7 +124,19 @@ export default async function AdminDashboardPage() {
             <span className="stat-card-icon">✅</span>
           </div>
         </Link>
+
+        {/* Annadan Sankalps */}
+        <Link href="/admin/sankalp" style={{ textDecoration: 'none' }}>
+          <div className="stat-card" style={{ background: '#0d9488', color: '#ffffff' }}>
+            <span className="stat-card-title">Annadan Sankalps</span>
+            <span className="stat-card-value">{stats.sankalps}</span>
+            <span className="stat-card-icon">🎂</span>
+          </div>
+        </Link>
       </div>
+
+      {/* Registered Donors & Passwords Card */}
+      <AdminDonorCredentialsCard initialDonors={donors} />
 
       <div style={{ marginTop: '3rem', backgroundColor: '#ffffff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
         <h3 style={{ marginBottom: '1rem', color: 'var(--accent-teal-dark)' }}>System Welcome</h3>

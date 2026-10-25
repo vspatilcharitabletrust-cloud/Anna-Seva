@@ -46,10 +46,10 @@ export default function PublicHeader() {
   }, []);
 
   const navItems = [
-    { label: t('nav.home', 'HOME'), path: '/' },
     { label: t('nav.about', 'ABOUT'), path: '/about' },
     { label: t('nav.media', 'MEDIA'), path: '/media' },
     { label: t('nav.available_food', 'AVAILABLE FOOD LIST'), path: '/available-food' },
+    { label: '🎂 ANNADAN SANKALP', path: '/annadan-sankalp' },
     { label: t('nav.donate', 'DONATE'), path: '/donate' },
     { label: t('nav.contact', 'CONTACT'), path: '/contact' }
   ];
@@ -134,111 +134,112 @@ export default function PublicHeader() {
                 type="button"
                 onClick={() => setLangOpen(!langOpen)}
                 className="language-selector-btn"
-              style={{
-                background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(15, 118, 110, 0.12))',
-                border: '1.5px solid var(--accent-teal)',
-                color: 'var(--accent-teal-dark)',
-                padding: '0.45rem 0.95rem',
-                borderRadius: '50px',
-                fontWeight: '700',
-                fontSize: '0.88rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.45rem',
-                outline: 'none',
-                boxShadow: '0 2px 6px rgba(13, 148, 136, 0.12)',
-                transition: 'all 0.2s ease'
-              }}
-
-            >
-              <span style={{ fontSize: '1rem' }}>🌐</span>
-              <span>{language === 'en' ? 'English' : language === 'hi' ? 'हिंदी' : 'मराठी'}</span>
-              <span style={{ fontSize: '0.7rem', transition: 'transform 0.2s', transform: langOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
-            </button>
-
-            {langOpen && (
-              <div
-                className="language-dropdown-menu animate-fade-in"
                 style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 8px)',
-                  right: 0,
-                  backgroundColor: '#ffffff',
-                  borderRadius: '14px',
-                  boxShadow: '0 10px 25px rgba(15, 23, 42, 0.15)',
-                  border: '1px solid var(--border-light)',
-                  minWidth: '170px',
-                  zIndex: 1000,
-                  overflow: 'hidden',
-                  padding: '0.35rem 0'
+                  background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.08), rgba(15, 118, 110, 0.12))',
+                  border: '1.2px solid var(--accent-teal)',
+                  color: 'var(--accent-teal-dark)',
+                  padding: '0.22rem 0.55rem',
+                  borderRadius: '50px',
+                  fontWeight: '700',
+                  fontSize: '0.76rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  outline: 'none',
+                  boxShadow: '0 1px 4px rgba(13, 148, 136, 0.1)',
+                  transition: 'all 0.2s ease',
+                  lineHeight: 1.2
                 }}
+                title="Select Language / भाषा निवडा"
               >
-                <button
-                  type="button"
-                  onClick={() => { setLanguage('en'); setLangOpen(false); }}
+                <span style={{ fontSize: '0.82rem', lineHeight: 1 }}>🌐</span>
+                <span>{language === 'en' ? 'English' : language === 'hi' ? 'हिंदी' : 'मराठी'}</span>
+                <span style={{ fontSize: '0.55rem', transition: 'transform 0.2s', transform: langOpen ? 'rotate(180deg)' : 'none', opacity: 0.8 }}>▼</span>
+              </button>
+
+              {langOpen && (
+                <div
+                  className="language-dropdown-menu animate-fade-in"
                   style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '0.65rem 1.1rem',
-                    border: 'none',
-                    background: language === 'en' ? 'rgba(13, 148, 136, 0.1)' : 'transparent',
-                    color: language === 'en' ? 'var(--accent-teal-dark)' : 'var(--text-main)',
-                    fontWeight: language === 'en' ? '800' : '600',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.65rem',
-                    fontSize: '0.9rem',
-                    transition: 'background-color 0.15s ease'
+                    position: 'absolute',
+                    top: 'calc(100% + 5px)',
+                    right: 0,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 24px rgba(15, 23, 42, 0.15)',
+                    border: '1px solid var(--border-light)',
+                    minWidth: '155px',
+                    zIndex: 1000,
+                    overflow: 'hidden',
+                    padding: '0.3rem 0'
                   }}
                 >
-                  <span style={{ fontSize: '1.05rem' }}>🇬🇧</span> English
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setLanguage('hi'); setLangOpen(false); }}
-                  style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '0.65rem 1.1rem',
-                    border: 'none',
-                    background: language === 'hi' ? 'rgba(13, 148, 136, 0.1)' : 'transparent',
-                    color: language === 'hi' ? 'var(--accent-teal-dark)' : 'var(--text-main)',
-                    fontWeight: language === 'hi' ? '800' : '600',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.65rem',
-                    fontSize: '0.9rem',
-                    transition: 'background-color 0.15s ease'
-                  }}
-                >
-                  <span style={{ fontSize: '1.05rem' }}>🇮🇳</span> हिंदी (Hindi)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setLanguage('mr'); setLangOpen(false); }}
-                  style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '0.65rem 1.1rem',
-                    border: 'none',
-                    background: language === 'mr' ? 'rgba(13, 148, 136, 0.1)' : 'transparent',
-                    color: language === 'mr' ? 'var(--accent-teal-dark)' : 'var(--text-main)',
-                    fontWeight: language === 'mr' ? '800' : '600',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.65rem',
-                    fontSize: '0.9rem',
-                    transition: 'background-color 0.15s ease'
-                  }}
-                >
-                  <span style={{ fontSize: '1.05rem' }}>🚩</span> मराठी (Marathi)
-                </button>
-              </div>
-            )}
+                  <button
+                    type="button"
+                    onClick={() => { setLanguage('en'); setLangOpen(false); }}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '0.45rem 0.85rem',
+                      border: 'none',
+                      background: language === 'en' ? 'rgba(13, 148, 136, 0.1)' : 'transparent',
+                      color: language === 'en' ? 'var(--accent-teal-dark)' : 'var(--text-main)',
+                      fontWeight: language === 'en' ? '800' : '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.82rem',
+                      transition: 'background-color 0.15s ease'
+                    }}
+                  >
+                    <span style={{ fontSize: '0.95rem' }}>🇬🇧</span> English
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setLanguage('hi'); setLangOpen(false); }}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '0.45rem 0.85rem',
+                      border: 'none',
+                      background: language === 'hi' ? 'rgba(13, 148, 136, 0.1)' : 'transparent',
+                      color: language === 'hi' ? 'var(--accent-teal-dark)' : 'var(--text-main)',
+                      fontWeight: language === 'hi' ? '800' : '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.82rem',
+                      transition: 'background-color 0.15s ease'
+                    }}
+                  >
+                    <span style={{ fontSize: '0.95rem' }}>🇮🇳</span> हिंदी (Hindi)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setLanguage('mr'); setLangOpen(false); }}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '0.45rem 0.85rem',
+                      border: 'none',
+                      background: language === 'mr' ? 'rgba(13, 148, 136, 0.1)' : 'transparent',
+                      color: language === 'mr' ? 'var(--accent-teal-dark)' : 'var(--text-main)',
+                      fontWeight: language === 'mr' ? '800' : '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.82rem',
+                      transition: 'background-color 0.15s ease'
+                    }}
+                  >
+                    <span style={{ fontSize: '0.95rem' }}>🚩</span> मराठी (Marathi)
+                  </button>
+                </div>
+              )}
             </div>
           </li>
         </ul>

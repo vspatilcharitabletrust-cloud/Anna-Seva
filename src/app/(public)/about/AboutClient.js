@@ -244,7 +244,7 @@ export default function AboutClient({ dbAboutText }) {
             textTransform: 'uppercase',
             marginBottom: '0.5rem'
           }}>
-            <span>★</span>
+            <span></span>
             <span>{t('about.trustee_role', 'Founding President')}</span>
           </div>
 

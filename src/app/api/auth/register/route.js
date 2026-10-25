@@ -19,13 +19,13 @@ export async function POST(request) {
     
     // Insert into users
     const result = await query.run(`
-      INSERT INTO users (name, email, password, role, mobile, address, state_id, city_id, status)
-      VALUES (?, ?, ?, 'donor', ?, ?, ?, ?, 'pending')
-    `, [name, email, hashed, mobile || null, address || null, state_id || null, city_id || null]);
+      INSERT INTO users (name, email, password, plain_password, role, mobile, address, state_id, city_id, status)
+      VALUES (?, ?, ?, ?, 'donor', ?, ?, ?, ?, 'pending')
+    `, [name, email, hashed, password, mobile || null, address || null, state_id || null, city_id || null]);
 
     const newUser = await query.get('SELECT * FROM users WHERE id = ?', [result.lastInsertRowid]);
     
-    const { password: _, ...safeUser } = newUser;
+    const { password: _, plain_password: __, ...safeUser } = newUser;
     return Response.json({ success: true, user: safeUser, pendingApproval: true }, { status: 201 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

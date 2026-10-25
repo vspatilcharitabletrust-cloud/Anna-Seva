@@ -14,7 +14,9 @@ export default function PwaManager() {
   const [notificationStatusMsg, setNotificationStatusMsg] = useState('');
   const [isTestingPush, setIsTestingPush] = useState(false);
   const [showWidget, setShowWidget] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(true);
+  
+  // viewState can be: 'pill' (initial 10s compact banner), 'minimized' (compact floating circle icon), or 'panel' (expanded card)
+  const [viewState, setViewState] = useState('pill');
 
   // Translations dictionary for PWA features
   const labels = {
@@ -32,7 +34,8 @@ export default function PwaManager() {
       iosStep: '1. Tap the Share button in Safari (icon at bottom) ➔ 2. Select "Add to Home Screen".',
       close: 'Close',
       dismiss: 'Dismiss',
-      appReady: '📱 Anna Seva Mobile App Ready'
+      appReady: 'Anna Seva Mobile App',
+      appPill: 'Anna Seva App'
     },
     mr: {
       installApp: 'अन्न सेवा ॲप इन्स्टॉल करा',
@@ -48,7 +51,8 @@ export default function PwaManager() {
       iosStep: '१. Safari मध्ये खालील शेअर बटण दाबा ➔ २. "Add to Home Screen" निवडा.',
       close: 'बंद करा',
       dismiss: 'लपवा',
-      appReady: '📱 अन्न सेवा मोबाईल ॲप उपलब्ध'
+      appReady: 'अन्न सेवा मोबाईल ॲप',
+      appPill: 'अन्न सेवा ॲप'
     },
     hi: {
       installApp: 'अन्न सेवा ऐप इंस्टॉल करें',
@@ -64,7 +68,8 @@ export default function PwaManager() {
       iosStep: '१. Safari में नीचे शेयर बटन दबाएं ➔ २. "Add to Home Screen" चुनें।',
       close: 'बंद करें',
       dismiss: 'छुपाएं',
-      appReady: '📱 अन्न सेवा मोबाइल ऐप उपलब्ध'
+      appReady: 'अन्न सेवा मोबाइल ऐप',
+      appPill: 'अन्न सेवा ऐप'
     }
   };
 
@@ -108,16 +113,27 @@ export default function PwaManager() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
 
-    // If on mobile and not installed, show after 3 seconds
+    // Show widget shortly after page load
     const timer = setTimeout(() => {
       setShowWidget(true);
-    }, 3000);
+    }, 2000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
       clearTimeout(timer);
     };
   }, []);
+
+  // Make visible only for 10 seconds, then automatically minimize
+  useEffect(() => {
+    if (showWidget && viewState === 'pill') {
+      const autoMinimizeTimer = setTimeout(() => {
+        setViewState('minimized');
+      }, 10000); // 10 seconds
+
+      return () => clearTimeout(autoMinimizeTimer);
+    }
+  }, [showWidget, viewState]);
 
   // Handle native install prompt
   const handleInstallClick = async () => {
@@ -213,92 +229,195 @@ export default function PwaManager() {
 
   return (
     <>
-      {/* Floating PWA & Push Launcher Pill */}
+      {/* Floating PWA Launcher (Pill / Minimized Circle / Compact Panel) */}
       <div
         className="pwa-launcher animate-fade-in"
         style={{
           position: 'fixed',
-          bottom: '24px',
-          left: '24px',
+          bottom: '16px',
+          left: '16px',
           zIndex: 9999,
           fontFamily: 'var(--font-body, system-ui, sans-serif)'
         }}
       >
-        {isMinimized ? (
+        {viewState === 'minimized' ? (
+          /* State 1: Minimized Sleek Floating Button */
           <button
             type="button"
-            onClick={() => setIsMinimized(false)}
-            aria-label="Open PWA App & Alerts Panel"
+            onClick={() => setViewState('panel')}
+            aria-label={t.appReady}
+            title={t.appReady}
             style={{
+              position: 'relative',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#090e1a',
+              border: '1.5px solid rgba(13, 148, 136, 0.5)',
+              boxShadow: '0 6px 18px rgba(0, 0, 0, 0.3), 0 0 10px rgba(13, 148, 136, 0.3)',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.6rem',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '1.15rem',
+              transition: 'all 0.2s ease',
+              backdropFilter: 'blur(8px)',
+              padding: 0
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.08)';
+              e.currentTarget.style.borderColor = 'var(--accent-teal, #0d9488)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.borderColor = 'rgba(13, 148, 136, 0.5)';
+            }}
+          >
+            <span style={{ lineHeight: 1 }}>📱</span>
+            <span
+              style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#10b981',
+                border: '1.5px solid #090e1a',
+                boxShadow: '0 0 6px #10b981'
+              }}
+            />
+          </button>
+        ) : viewState === 'pill' ? (
+          /* State 2: Small Popup Pill (Visible for 10s, then auto-minimizes) */
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
               backgroundColor: '#090e1a',
               color: '#ffffff',
-              padding: '0.65rem 1.15rem',
+              padding: '0.38rem 0.75rem',
               borderRadius: '999px',
-              border: '1.5px solid rgba(13, 148, 136, 0.4)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25), 0 0 12px rgba(13, 148, 136, 0.3)',
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-              fontWeight: 700,
+              border: '1.5px solid rgba(13, 148, 136, 0.45)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25), 0 0 10px rgba(13, 148, 136, 0.25)',
               backdropFilter: 'blur(10px)',
               transition: 'all 0.25s ease'
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.borderColor = 'var(--accent-teal)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.borderColor = 'rgba(13, 148, 136, 0.4)';
-            }}
           >
-            <span style={{
-              display: 'inline-flex',
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-              backgroundColor: '#10b981',
-              boxShadow: '0 0 8px #10b981'
-            }} />
-            <span>📱 {isInstalled ? t.alertsTitle : t.appReady}</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setViewState('panel')}
+              aria-label="Open PWA App & Alerts Panel"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                background: 'none',
+                border: 'none',
+                color: '#ffffff',
+                cursor: 'pointer',
+                padding: 0,
+                fontFamily: 'inherit',
+                fontSize: '0.78rem',
+                fontWeight: 700
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: '#10b981',
+                  boxShadow: '0 0 6px #10b981',
+                  flexShrink: 0
+                }}
+              />
+              <span>📱 {isInstalled ? t.alertsTitle : t.appPill}</span>
+            </button>
+
+            {/* Quick Minimize Button on Pill */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setViewState('minimized');
+              }}
+              aria-label="Minimize"
+              title="Minimize"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                color: '#94a3b8',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '0.65rem',
+                padding: 0,
+                marginLeft: '0.25rem',
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#94a3b8';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+              }}
+            >
+              ✕
+            </button>
+          </div>
         ) : (
+          /* State 3: Compact Panel */
           <div
             style={{
-              width: '320px',
+              width: '290px',
               maxWidth: 'calc(100vw - 32px)',
               backgroundColor: '#ffffff',
-              borderRadius: '20px',
-              boxShadow: '0 20px 40px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(226, 232, 240, 0.9)',
-              padding: '1.4rem',
+              borderRadius: '16px',
+              boxShadow: '0 16px 36px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(226, 232, 240, 0.9)',
+              padding: '1.1rem',
               border: '1.5px solid rgba(13, 148, 136, 0.25)',
               position: 'relative'
             }}
           >
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                 <img
                   src="/icon.png"
                   alt="Anna Seva"
-                  style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1.5px solid var(--accent-teal)' }}
+                  style={{ width: '24px', height: '24px', borderRadius: '50%', border: '1.5px solid var(--accent-teal)' }}
                 />
-                <span style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--primary-navy)' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--primary-navy)' }}>
                   अन्न सेवा (PWA)
                 </span>
               </div>
               <button
                 type="button"
-                onClick={() => setIsMinimized(true)}
+                onClick={() => setViewState('minimized')}
+                aria-label="Minimize"
+                title="Minimize"
                 style={{
-                  background: 'none',
+                  background: '#f1f5f9',
                   border: 'none',
-                  fontSize: '1.1rem',
-                  color: '#94a3b8',
+                  borderRadius: '50%',
+                  width: '22px',
+                  height: '22px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  color: '#64748b',
                   cursor: 'pointer',
-                  padding: '0.2rem'
+                  padding: 0
                 }}
               >
                 ✕
@@ -309,15 +428,15 @@ export default function PwaManager() {
             {!isInstalled && (
               <div style={{
                 background: 'linear-gradient(135deg, #f0fdfa, #ecfdf5)',
-                borderRadius: '12px',
-                padding: '0.9rem',
+                borderRadius: '10px',
+                padding: '0.75rem',
                 border: '1px solid rgba(13, 148, 136, 0.2)',
-                marginBottom: '1rem'
+                marginBottom: '0.75rem'
               }}>
-                <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--accent-teal-dark)', marginBottom: '0.25rem' }}>
+                <div style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--accent-teal-dark)', marginBottom: '0.2rem' }}>
                   📱 {t.installApp}
                 </div>
-                <div style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '0.75rem', lineHeight: '1.4' }}>
+                <div style={{ fontSize: '0.74rem', color: '#64748b', marginBottom: '0.6rem', lineHeight: '1.35' }}>
                   {language === 'mr' ? 'अॅप डाऊनलोड न करता थेट मोबाईल स्क्रीनवर वापरा.' : 'Install directly to your home screen for quick access.'}
                 </div>
                 <button
@@ -328,12 +447,12 @@ export default function PwaManager() {
                     backgroundColor: 'var(--accent-teal)',
                     color: '#ffffff',
                     border: 'none',
-                    borderRadius: '8px',
-                    padding: '0.55rem',
-                    fontSize: '0.82rem',
+                    borderRadius: '6px',
+                    padding: '0.45rem',
+                    fontSize: '0.78rem',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)'
+                    boxShadow: '0 3px 8px rgba(13, 148, 136, 0.25)'
                   }}
                 >
                   ⚡ {t.installBtn}
@@ -344,14 +463,14 @@ export default function PwaManager() {
             {/* Push Notifications Section */}
             <div style={{
               background: '#f8fafc',
-              borderRadius: '12px',
-              padding: '0.9rem',
+              borderRadius: '10px',
+              padding: '0.75rem',
               border: '1px solid #e2e8f0'
             }}>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--primary-navy)', marginBottom: '0.25rem' }}>
+              <div style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--primary-navy)', marginBottom: '0.2rem' }}>
                 🔔 {t.alertsTitle}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '0.75rem', lineHeight: '1.4' }}>
+              <div style={{ fontSize: '0.74rem', color: '#64748b', marginBottom: '0.6rem', lineHeight: '1.35' }}>
                 {t.alertsDesc}
               </div>
 
@@ -364,25 +483,25 @@ export default function PwaManager() {
                     background: 'linear-gradient(135deg, #090e1a, #1e293b)',
                     color: '#ffffff',
                     border: 'none',
-                    borderRadius: '8px',
-                    padding: '0.55rem',
-                    fontSize: '0.82rem',
+                    borderRadius: '6px',
+                    padding: '0.45rem',
+                    fontSize: '0.78rem',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)'
+                    boxShadow: '0 3px 8px rgba(15, 23, 42, 0.15)'
                   }}
                 >
                   {t.enableAlerts}
                 </button>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <div style={{
-                    fontSize: '0.78rem',
+                    fontSize: '0.74rem',
                     fontWeight: 700,
                     color: '#059669',
                     backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                    padding: '0.35rem 0.65rem',
-                    borderRadius: '6px',
+                    padding: '0.25rem 0.5rem',
+                    borderRadius: '5px',
                     textAlign: 'center'
                   }}>
                     {t.alertsActive}
@@ -396,9 +515,9 @@ export default function PwaManager() {
                       backgroundColor: 'transparent',
                       color: 'var(--accent-teal-dark)',
                       border: '1px solid var(--accent-teal)',
-                      borderRadius: '8px',
-                      padding: '0.45rem',
-                      fontSize: '0.78rem',
+                      borderRadius: '6px',
+                      padding: '0.35rem',
+                      fontSize: '0.74rem',
                       fontWeight: 700,
                       cursor: 'pointer'
                     }}
@@ -410,9 +529,9 @@ export default function PwaManager() {
 
               {notificationStatusMsg && (
                 <div style={{
-                  fontSize: '0.74rem',
+                  fontSize: '0.72rem',
                   color: notificationStatusMsg.includes('✓') ? '#059669' : '#dc2626',
-                  marginTop: '0.5rem',
+                  marginTop: '0.4rem',
                   textAlign: 'center',
                   fontWeight: 600
                 }}>
@@ -422,15 +541,15 @@ export default function PwaManager() {
             </div>
 
             {/* Bottom Actions */}
-            <div style={{ marginTop: '0.85rem', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ marginTop: '0.65rem', display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 type="button"
-                onClick={() => setIsMinimized(true)}
+                onClick={() => setViewState('minimized')}
                 style={{
                   background: 'none',
                   border: 'none',
                   color: '#94a3b8',
-                  fontSize: '0.78rem',
+                  fontSize: '0.74rem',
                   cursor: 'pointer',
                   fontWeight: 600
                 }}
@@ -448,20 +567,20 @@ export default function PwaManager() {
           <div
             className="modal-content animate-fade-in"
             onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: '380px', textAlign: 'center', padding: '2rem' }}
+            style={{ maxWidth: '380px', textAlign: 'center', padding: '1.75rem' }}
           >
-            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📱</div>
-            <h3 style={{ fontSize: '1.25rem', color: 'var(--primary-navy)', marginBottom: '0.75rem', fontWeight: 800 }}>
+            <div style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>📱</div>
+            <h3 style={{ fontSize: '1.15rem', color: 'var(--primary-navy)', marginBottom: '0.5rem', fontWeight: 800 }}>
               {t.iosTitle}
             </h3>
-            <p style={{ fontSize: '0.9rem', color: '#475569', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5, marginBottom: '1.25rem' }}>
               {t.iosStep}
             </p>
             <button
               type="button"
               className="form-submit-btn"
               onClick={() => setShowIosPrompt(false)}
-              style={{ width: 'auto', padding: '0.65rem 1.75rem', margin: '0 auto' }}
+              style={{ width: 'auto', padding: '0.55rem 1.5rem', margin: '0 auto', fontSize: '0.85rem' }}
             >
               {t.close}
             </button>

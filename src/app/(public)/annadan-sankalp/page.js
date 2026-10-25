@@ -33,6 +33,10 @@ export default function AnnadanSankalpPage() {
   const [occasionDropdownOpen, setOccasionDropdownOpen] = useState(false);
   const occasionDropdownRef = useRef(null);
 
+  // Certificate Lightbox Modal State (Wall of Blessings)
+  const [modalCertificate, setModalCertificate] = useState(null);
+  const [loadingModalCert, setLoadingModalCert] = useState(false);
+
   const [formData, setFormData] = useState({
     donor_name: '',
     donor_email: '',
@@ -146,6 +150,23 @@ export default function AnnadanSankalpPage() {
       } catch (e) {
         console.error(e);
       }
+    }
+  };
+
+  const handleOpenCertificate = async (item) => {
+    setLoadingModalCert(true);
+    try {
+      const res = await fetch(`/api/sankalp?code=${encodeURIComponent(item.certificate_code)}`);
+      const data = await res.json();
+      if (res.ok && !data.error) {
+        setModalCertificate(data);
+      } else {
+        setModalCertificate(item);
+      }
+    } catch {
+      setModalCertificate(item);
+    } finally {
+      setLoadingModalCert(false);
     }
   };
 
@@ -300,31 +321,6 @@ export default function AnnadanSankalpPage() {
         </div>
       </section>
 
-      {/* Feature Highlights Grid */}
-      <section className="sankalp-highlights-section">
-        <div className="highlights-container">
-          <div className="highlight-card">
-            <div className="highlight-icon">📜</div>
-            <h3>Branded Digital Certificate</h3>
-            <p>Receive an authentic, high-resolution commemorative certificate in the honoree's name to cherish, print, and share on social media.</p>
-          </div>
-          <div className="highlight-card">
-            <div className="highlight-icon">📲</div>
-            <h3>WhatsApp & Photo Updates</h3>
-            <p>Get real-time photo updates of beneficiaries receiving fresh meals on the dedicated date directly on your WhatsApp.</p>
-          </div>
-          <div className="highlight-card">
-            <div className="highlight-icon">🍲</div>
-            <h3>100% Dedicated Impact</h3>
-            <p>Drives are coordinated directly with verified partner Orphanages, Old Age Homes (वृद्धाश्रम), and street communities across Maharashtra.</p>
-          </div>
-          <div className="highlight-card">
-            <div className="highlight-icon">🕊️</div>
-            <h3>Smrutidin & Holy Tithi Seva</h3>
-            <p>Honor parents, grandparents, and ancestors with wholesome traditional thalis and prayers on their sacred remembrance days.</p>
-          </div>
-        </div>
-      </section>
 
       {/* SECTION: Track / Verify Certificate by Reference ID */}
       <section id="track-certificate" className="verify-certificate-section">
@@ -573,20 +569,23 @@ export default function AnnadanSankalpPage() {
                       }
                     }}
                   >
-                    <div className="trigger-left">
-                      <span className="trigger-icon">{selectedOccasion.icon}</span>
-                      <div className="trigger-text-block">
-                        <div className="trigger-title-row">
+                    <div className="trigger-main-row">
+                      <div className="trigger-identity">
+                        <span className="trigger-icon">{selectedOccasion.icon}</span>
+                        <div className="trigger-title-group">
                           <strong className="trigger-title">{selectedOccasion.title}</strong>
                           <span className="trigger-badge">Active Selection</span>
                         </div>
-                        <p className="trigger-desc">{selectedOccasion.desc}</p>
+                      </div>
+                      <div className="trigger-action">
+                        <span className="trigger-change-hint">
+                          {occasionDropdownOpen ? 'Close Menu ▲' : 'Choose Occasion ▼'}
+                        </span>
                       </div>
                     </div>
-                    <div className="trigger-right">
-                      <span className="trigger-change-hint">
-                        {occasionDropdownOpen ? 'Close Menu ▲' : 'Choose Occasion ▼'}
-                      </span>
+
+                    <div className="trigger-desc-row">
+                      <p className="trigger-desc">{selectedOccasion.desc}</p>
                     </div>
                   </div>
 
@@ -942,11 +941,20 @@ export default function AnnadanSankalpPage() {
                   </div>
 
                   <div className="wall-card-footer">
-                    <Link
-                      href={`/annadan-sankalp/certificate/${item.certificate_code}`}
-                      className="wall-cert-link"
+                    <button
+                      type="button"
+                      onClick={() => handleOpenCertificate(item)}
+                      className="wall-cert-btn"
                     >
                       📜 View Certificate →
+                    </button>
+                    <Link
+                      href={`/annadan-sankalp/certificate/${item.certificate_code}`}
+                      target="_blank"
+                      className="wall-cert-newtab-btn"
+                      title="Open Certificate in New Tab ↗"
+                    >
+                      ↗
                     </Link>
                   </div>
                 </div>
@@ -954,6 +962,31 @@ export default function AnnadanSankalpPage() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Interactive Certificate Modal (Instant View from Wall of Blessings) */}
+      {modalCertificate && (
+        <div className="sankalp-modal-backdrop animate-fade-in" onClick={() => setModalCertificate(null)}>
+          <div className="sankalp-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="sankalp-modal-header">
+              <div className="modal-header-left">
+                <span className="modal-seal-badge">★ VERIFIED COMMEMORATIVE CERTIFICATE</span>
+                <strong>ID: {modalCertificate.certificate_code}</strong>
+              </div>
+              <button
+                type="button"
+                className="sankalp-modal-close"
+                onClick={() => setModalCertificate(null)}
+                aria-label="Close Certificate Modal"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="sankalp-modal-body">
+              <CommemorativeCertificate sankalp={modalCertificate} showBackLink={false} />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Page CSS */}
@@ -1033,54 +1066,7 @@ export default function AnnadanSankalpPage() {
           letter-spacing: 0.5px;
         }
 
-        /* Highlights */
-        .sankalp-highlights-section {
-          padding: 0 1.5rem;
-          margin-top: -2.5rem;
-          position: relative;
-          z-index: 2;
-        }
 
-        .highlights-container {
-          max-width: 1140px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 1.5rem;
-        }
-
-        .highlight-card {
-          background: #ffffff;
-          padding: 1.75rem;
-          border-radius: 14px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-          border: 1px solid #e2e8f0;
-          text-align: center;
-          transition: transform 0.2s ease;
-        }
-
-        .highlight-card:hover {
-          transform: translateY(-4px);
-        }
-
-        .highlight-icon {
-          font-size: 2.4rem;
-          margin-bottom: 0.75rem;
-        }
-
-        .highlight-card h3 {
-          font-size: 1.1rem;
-          color: #0f172a;
-          font-weight: 700;
-          margin-bottom: 0.5rem;
-        }
-
-        .highlight-card p {
-          font-size: 0.88rem;
-          color: #64748b;
-          line-height: 1.5;
-          margin: 0;
-        }
 
         /* Form */
         .sankalp-form-section {
@@ -1169,8 +1155,8 @@ export default function AnnadanSankalpPage() {
 
         .occasion-dropdown-trigger {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: column;
+          gap: 0.65rem;
           background: #ffffff;
           border: 2px solid #0d9488;
           border-radius: 12px;
@@ -1178,7 +1164,7 @@ export default function AnnadanSankalpPage() {
           cursor: pointer;
           transition: all 0.2s ease;
           box-shadow: 0 2px 8px rgba(13, 148, 136, 0.08);
-          gap: 1rem;
+          width: 100%;
         }
 
         .occasion-dropdown-trigger:hover,
@@ -1187,37 +1173,41 @@ export default function AnnadanSankalpPage() {
           box-shadow: 0 4px 16px rgba(13, 148, 136, 0.16);
         }
 
-        .trigger-left {
+        .trigger-main-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.75rem;
+          width: 100%;
+        }
+
+        .trigger-identity {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 0.85rem;
           min-width: 0;
           flex: 1;
         }
 
         .trigger-icon {
-          font-size: 2.2rem;
+          font-size: 2rem;
           flex-shrink: 0;
           line-height: 1;
         }
 
-        .trigger-text-block {
-          min-width: 0;
-          flex: 1;
-        }
-
-        .trigger-title-row {
+        .trigger-title-group {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          margin-bottom: 0.2rem;
           flex-wrap: wrap;
+          min-width: 0;
         }
 
         .trigger-title {
           font-size: 1.05rem;
           font-weight: 800;
           color: #0f172a;
+          line-height: 1.3;
         }
 
         .trigger-badge {
@@ -1227,23 +1217,16 @@ export default function AnnadanSankalpPage() {
           font-weight: 800;
           padding: 0.15rem 0.55rem;
           border-radius: 50px;
+          white-space: nowrap;
         }
 
-        .trigger-desc {
-          font-size: 0.8rem;
-          color: #64748b;
-          margin: 0;
-          line-height: 1.35;
-        }
-
-        .trigger-right {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
+        .trigger-action {
           flex-shrink: 0;
         }
 
         .trigger-change-hint {
+          display: inline-flex;
+          align-items: center;
           font-size: 0.82rem;
           font-weight: 700;
           color: #0d9488;
@@ -1252,11 +1235,27 @@ export default function AnnadanSankalpPage() {
           padding: 0.35rem 0.75rem;
           border-radius: 50px;
           transition: all 0.2s ease;
+          white-space: nowrap;
         }
 
-        .occasion-dropdown-trigger:hover .trigger-change-hint {
+        .occasion-dropdown-trigger:hover .trigger-change-hint,
+        .occasion-dropdown-trigger.open .trigger-change-hint {
           background: #0d9488;
           color: #ffffff;
+        }
+
+        .trigger-desc-row {
+          width: 100%;
+          padding-top: 0.45rem;
+          border-top: 1px dashed #e2e8f0;
+        }
+
+        .trigger-desc {
+          font-size: 0.84rem;
+          color: #475569;
+          margin: 0;
+          line-height: 1.45;
+          text-align: left;
         }
 
         .occasion-dropdown-menu {
@@ -1704,15 +1703,158 @@ export default function AnnadanSankalpPage() {
           color: #0d9488;
         }
 
-        .wall-cert-link {
-          color: #0d9488;
-          text-decoration: none;
-          font-size: 0.88rem;
-          font-weight: 700;
+        .wall-card-footer {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding-top: 1rem;
+          border-top: 1px solid #e2e8f0;
+          margin-top: auto;
         }
 
-        .wall-cert-link:hover {
-          text-decoration: underline;
+        .wall-cert-btn {
+          flex: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          background: #0d9488;
+          color: #ffffff;
+          border: none;
+          padding: 0.6rem 1rem;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 0.88rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .wall-cert-btn:hover {
+          background: #0f766e;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+        }
+
+        .wall-cert-newtab-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          background: #f1f5f9;
+          color: #475569;
+          text-decoration: none;
+          font-weight: 800;
+          font-size: 1rem;
+          border: 1px solid #cbd5e1;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+        }
+
+        .wall-cert-newtab-btn:hover {
+          background: #e2e8f0;
+          color: #0f172a;
+          border-color: #94a3b8;
+        }
+
+        /* Certificate Modal Overlay */
+        .sankalp-modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(15, 23, 42, 0.8);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          padding: 1.5rem;
+          overflow-y: auto;
+        }
+
+        .sankalp-modal-container {
+          background: #ffffff;
+          border-radius: 20px;
+          max-width: 980px;
+          width: 100%;
+          max-height: 92vh;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+          border: 2px solid #fed7aa;
+          animation: modalSlideUp 0.25s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .sankalp-modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 1.75rem;
+          background: #fffbeb;
+          border-bottom: 1.5px solid #fed7aa;
+          flex-shrink: 0;
+        }
+
+        .modal-header-left {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          font-size: 0.92rem;
+          color: #92400e;
+        }
+
+        .modal-seal-badge {
+          background: #d97706;
+          color: #ffffff;
+          font-size: 0.72rem;
+          font-weight: 800;
+          padding: 0.2rem 0.65rem;
+          border-radius: 50px;
+          letter-spacing: 0.5px;
+        }
+
+        .sankalp-modal-close {
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
+          color: #475569;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .sankalp-modal-close:hover {
+          background: #fee2e2;
+          color: #dc2626;
+          border-color: #fca5a5;
+        }
+
+        .sankalp-modal-body {
+          padding: 1.5rem;
+          overflow-y: auto;
+          flex: 1;
+          background: #f8fafc;
         }
 
         /* Verification & Certificate Tracker Section */
@@ -2117,7 +2259,47 @@ export default function AnnadanSankalpPage() {
             font-size: 2rem;
           }
           .form-wrapper {
-            padding: 1.5rem;
+            padding: 1.25rem 1rem;
+          }
+          .step-label {
+            font-size: 1.05rem;
+            gap: 0.6rem;
+          }
+          .step-label .step-num {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            min-height: 30px;
+            font-size: 0.9rem;
+          }
+          .occasion-dropdown-trigger {
+            padding: 0.8rem 0.9rem;
+            gap: 0.5rem;
+          }
+          .trigger-icon {
+            font-size: 1.6rem;
+          }
+          .trigger-title {
+            font-size: 0.95rem;
+          }
+          .trigger-change-hint {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+          }
+          .trigger-desc {
+            font-size: 0.8rem;
+          }
+          .occasion-dropdown-menu {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 0.75rem;
+          }
+          .occasion-grid-menu {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+          }
+          .dropdown-grid-card {
+            padding: 0.7rem 0.85rem;
           }
           .verify-search-form {
             flex-direction: column;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { toPng } from 'html-to-image';
 
@@ -12,6 +12,18 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
   const [localStatus, setLocalStatus] = useState(sankalp?.status || 'pledged');
 
   const certRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sankalp?.status) {
+      setLocalStatus(sankalp.status);
+    }
+  }, [sankalp?.status]);
 
   if (!sankalp) return null;
 

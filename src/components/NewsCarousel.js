@@ -9,7 +9,7 @@ const newsItems = [
     title: "'अन्नसेवा' डिजिटल उपक्रमामुळे उपाशी पोटाला मिळणार आधार",
     source: "Apal Man (आपलं मन)",
     date: "17 Jun 2026",
-    image: "/news/news-6.jpg",
+    image: "/news/news-6.png",
     description: "लातूर व मराठवाड्यातील पहिल्या 'डिजिटल अन्नदान' उपक्रमाचा प्रारंभ. २५ स्वयंसेवी संस्थांच्या मदतीने मंगल कार्यालये, हॉटेल्स व केटर्समधील अतिरिक्त अन्न गरजूंपर्यंत सुरक्षितपणे पोहोचवण्यासाठी 'अन्नसेवा' हे स्वयंचलित डिजिटल पोर्टल सुरू करण्यात आले आहे."
   },
   {
@@ -17,7 +17,7 @@ const newsItems = [
     title: "डिजिटल तंत्रज्ञानातून अन्नदानाचा महायज्ञ",
     source: "Sakal (सकाळ वृत्तसेवा)",
     date: "09 Jun 2026",
-    image: "/news/news-2.jpg",
+    image: "/news/news-2.png",
     description: "श्री विश्वनाथराव शामराव पाटील चॅरिटेबल ट्रस्ट अंतर्गत 'अन्न सेवा' या नावीन्यपूर्ण डिजिटल अन्नदान उपक्रमाची सुरुवात करण्यात आली आहे. याकरिता ट्रस्टचे प्रमुख हृदयनाथ पाटील या तरुणाने पुढाकार घेतला."
   },
   {
@@ -59,7 +59,6 @@ export default function NewsCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
-  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -105,16 +104,7 @@ export default function NewsCarousel() {
     return () => clearInterval(interval);
   }, [currentIndex, isPaused, maxIndex]);
 
-  // Handle lightbox escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setLightboxImage(null);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+
 
   return (
     <section
@@ -167,19 +157,19 @@ export default function NewsCarousel() {
               {newsItems.map((item) => (
                 <div key={item.id} className="news-card">
                   {/* News Card Image wrapper */}
-                  <div
+                  <a
+                    href={item.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="news-card-image-box"
-                    onClick={() => setLightboxImage(item.image)}
+                    style={{ display: 'block', textDecoration: 'none' }}
                   >
                     <img
                       src={item.image}
                       alt={item.title}
                       className="news-card-image"
                     />
-                    <div className="news-card-image-overlay">
-                      <span className="zoom-badge">{t('media.zoom_badge', '🔍 Click to Zoom / Read')}</span>
-                    </div>
-                  </div>
+                  </a>
 
                   {/* Card Content details */}
                   <div className="news-card-body">
@@ -190,12 +180,15 @@ export default function NewsCarousel() {
                     <h3 className="news-card-title">{item.title}</h3>
                     <p className="news-card-desc">{item.description}</p>
 
-                    <button
-                      onClick={() => setLightboxImage(item.image)}
+                    <a
+                      href={item.image}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="news-card-btn"
+                      style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                      {t('media.view_clip_btn', '📰 View Full Newspaper Clip')}
-                    </button>
+                      {t('media.view_clip_btn', '📰 View Full Newspaper Clip')} ↗
+                    </a>
                   </div>
                 </div>
               ))}
@@ -218,32 +211,6 @@ export default function NewsCarousel() {
         )}
 
       </div>
-
-      {/* Lightbox / Zoom Modal popup */}
-      {lightboxImage && (
-        <div
-          className="lightbox-overlay"
-          onClick={() => setLightboxImage(null)}
-        >
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="lightbox-close"
-              onClick={() => setLightboxImage(null)}
-              aria-label="Close zoomed image"
-            >
-              &times;
-            </button>
-            <div className="lightbox-image-wrapper">
-              <img
-                src={lightboxImage}
-                alt="Zoomed News Coverage Clipping"
-                className="lightbox-image"
-              />
-            </div>
-            <p className="lightbox-caption">Press ESC or click anywhere outside to close</p>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

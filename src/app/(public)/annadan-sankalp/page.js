@@ -154,21 +154,38 @@ export default function AnnadanSankalpPage() {
   };
 
   const handleOpenCertificate = async (item) => {
+    // Open immediately with already-fetched wall sankalp data for zero lag on mobile
+    setModalCertificate(item);
     setLoadingModalCert(true);
     try {
       const res = await fetch(`/api/sankalp?code=${encodeURIComponent(item.certificate_code)}`);
       const data = await res.json();
       if (res.ok && !data.error) {
         setModalCertificate(data);
-      } else {
-        setModalCertificate(item);
       }
-    } catch {
-      setModalCertificate(item);
+    } catch (e) {
+      console.error(e);
     } finally {
       setLoadingModalCert(false);
     }
   };
+
+  // Lock body scroll and handle Escape key when certificate modal is open
+  useEffect(() => {
+    if (modalCertificate) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') setModalCertificate(null);
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [modalCertificate]);
 
   const handlePhotoUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -2311,6 +2328,54 @@ export default function AnnadanSankalpPage() {
           .approved-notification-bar {
             flex-direction: column;
             align-items: flex-start;
+          }
+          .sankalp-modal-backdrop {
+            padding: 0.5rem;
+            align-items: flex-start;
+          }
+          .sankalp-modal-container {
+            max-height: calc(100vh - 1rem);
+            border-radius: 14px;
+            margin: 0.5rem auto;
+          }
+          .sankalp-modal-header {
+            padding: 0.75rem 1rem;
+          }
+          .modal-header-left {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.2rem;
+            font-size: 0.8rem;
+          }
+          .modal-seal-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+          }
+          .sankalp-modal-body {
+            padding: 0.75rem 0.4rem;
+          }
+        }
+
+        @media print {
+          .sankalp-modal-backdrop {
+            position: static !important;
+            background: transparent !important;
+            padding: 0 !important;
+          }
+          .sankalp-modal-container {
+            box-shadow: none !important;
+            border: none !important;
+            max-height: none !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+          }
+          .sankalp-modal-header {
+            display: none !important;
+          }
+          .sankalp-modal-body {
+            padding: 0 !important;
+            background: transparent !important;
+            overflow: visible !important;
           }
         }
       `}</style>

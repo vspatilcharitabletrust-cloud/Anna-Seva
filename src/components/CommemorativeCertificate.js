@@ -14,10 +14,10 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
   const certRef = useRef(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (showBackLink && typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, []);
+  }, [showBackLink]);
 
   useEffect(() => {
     if (sankalp?.status) {
@@ -105,19 +105,63 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
     if (!certRef.current) return;
     setDownloadingPng(true);
     try {
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+      // On mobile retina screens (DPR 2-3), avoid canvas allocation memory crashes by using capped ratio
+      const targetPixelRatio = isMobile ? Math.min(2, window.devicePixelRatio || 1.5) : 2;
+
       const dataUrl = await toPng(certRef.current, {
         quality: 0.98,
-        pixelRatio: 2,
-        cacheBust: true,
-        backgroundColor: '#ffffff'
+        pixelRatio: targetPixelRatio,
+        backgroundColor: '#ffffff',
+        filter: (node) => !node.classList?.contains('no-print')
       });
+
+      const fileName = `Anna_Seva_Certificate_${sankalp.certificate_code}.png`;
+
+      // Convert base64 dataUrl to binary Blob
+      const parts = dataUrl.split(',');
+      const byteString = atob(parts[1]);
+      const mimeMatch = parts[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+      const u8arr = new Uint8Array(byteString.length);
+      for (let i = 0; i < byteString.length; i++) {
+        u8arr[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([u8arr], { type: mime });
+      const file = new File([blob], fileName, { type: 'image/png' });
+
+      // 1. Web Share API with files (ideal for mobile iOS Safari & Android Chrome)
+      if (typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: `Anna Seva Certificate • ${sankalp.honoree_name}`,
+            text: `Official Commemorative Certificate of Annadan Sankalp (${sankalp.certificate_code})`
+          });
+          return;
+        } catch (shareErr) {
+          // If user aborted / dismissed native share sheet, return cleanly without error alert
+          if (shareErr.name === 'AbortError') return;
+        }
+      }
+
+      // 2. Direct Blob download (desktop & mobile browser fallback)
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `Anna_Seva_Certificate_${sankalp.certificate_code}.png`;
-      link.href = dataUrl;
+      link.download = fileName;
+      link.href = blobUrl;
+      link.style.display = 'none';
+      document.body.appendChild(link);
       link.click();
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link);
+        }
+        URL.revokeObjectURL(blobUrl);
+      }, 3000);
     } catch (err) {
       console.error('Failed to export PNG:', err);
-      alert('Could not export PNG. You can also use Print / Save as PDF.');
+      alert('Could not export PNG. You can also use Print / Save as PDF or open the certificate in a new tab.');
     } finally {
       setDownloadingPng(false);
     }
@@ -150,7 +194,7 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
   // IF NOT YET APPROVED: DISPLAY PENDING APPROVAL NOTIFICATION
   if (!isApproved) {
     return (
-      <div className="certificate-page-container">
+      <div className={`certificate-page-container ${!showBackLink ? 'in-modal' : ''}`}>
         {/* Navigation Toolbar */}
         <div className="certificate-toolbar no-print">
           {showBackLink && (
@@ -297,7 +341,7 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
 
   // ONCE APPROVED: FULL ROYAL DIGITAL COMMEMORATIVE CERTIFICATE
   return (
-    <div className="certificate-page-container">
+    <div className={`certificate-page-container ${!showBackLink ? 'in-modal' : ''}`}>
       {/* Action Toolbar */}
       <div className="certificate-toolbar no-print">
         {showBackLink && (
@@ -480,6 +524,16 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
           margin: 0 auto;
           padding: 2rem 1rem 4rem;
           font-family: var(--font-body, system-ui, sans-serif);
+        }
+
+        .certificate-page-container.in-modal {
+          padding: 0 0 1rem;
+          max-width: 100%;
+        }
+
+        .certificate-page-container.in-modal .certificate-toolbar {
+          margin-bottom: 1.25rem;
+          padding: 0.75rem 1rem;
         }
 
         .certificate-toolbar {
@@ -1169,22 +1223,172 @@ export default function CommemorativeCertificate({ sankalp, showBackLink = true,
         }
 
         @media (max-width: 768px) {
+          .certificate-page-container {
+            padding: 0.5rem 0.25rem 2rem;
+          }
+          .certificate-page-container.in-modal {
+            padding: 0 0 1rem;
+          }
+
+          .toolbar-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.45rem;
+            width: 100%;
+          }
+          .toolbar-btn {
+            font-size: 0.74rem;
+            padding: 0.55rem 0.35rem;
+            justify-content: center;
+            white-space: nowrap;
+          }
+
+          .certificate-frame {
+            border-width: 6px;
+            border-radius: 12px;
+            padding: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08), inset 0 0 0 2px #fbbf24;
+          }
+
           .certificate-inner-border {
-            padding: 1.5rem 1rem;
+            padding: 1.25rem 0.75rem;
+            border-width: 1.5px;
+            border-radius: 8px;
           }
+
+          .certificate-watermark {
+            font-size: 3.5rem;
+          }
+
+          .certificate-shloka {
+            font-size: 0.72rem;
+            letter-spacing: 0.3px;
+            line-height: 1.45;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+          }
+
+          .certificate-org-header {
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 0.85rem;
+          }
+
+          .cert-logo-seal img {
+            width: 50px;
+            height: 50px;
+          }
+
+          .cert-trust-name {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+          }
+
           .cert-brand-title {
-            font-size: 1.6rem;
+            font-size: 1.45rem;
+            margin: 0.1rem 0;
           }
+
+          .cert-subtitle {
+            font-size: 0.72rem;
+            line-height: 1.3;
+          }
+
+          .certificate-ribbon {
+            margin: 0.85rem 0;
+          }
+
+          .ribbon-badge {
+            padding: 0.3rem 0.85rem;
+            font-size: 0.72rem;
+          }
+
+          .cert-lead-text {
+            font-size: 0.85rem;
+            margin: 0.6rem 0 0.35rem;
+          }
+
+          .cert-honoree-showcase {
+            margin-bottom: 1rem;
+          }
+
           .cert-honoree-name {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
+            line-height: 1.3;
+            word-break: break-word;
           }
+
+          .cert-honoree-relation {
+            font-size: 0.82rem;
+          }
+
+          .cert-honoree-photo-frame,
+          .cert-honoree-avatar-frame {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 0.5rem;
+          }
+
+          .cert-dedication-box {
+            padding: 0.75rem 0.85rem;
+            margin-bottom: 1.1rem;
+            border-left-width: 3px;
+            border-right-width: 3px;
+          }
+
+          .cert-dedication-text {
+            font-size: 0.88rem;
+            line-height: 1.5;
+          }
+
+          .cert-details-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+            padding: 0.75rem 0.85rem;
+            margin-bottom: 1.1rem;
+          }
+
+          .detail-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.2px;
+          }
+
+          .detail-value {
+            font-size: 0.82rem;
+            line-height: 1.3;
+          }
+
+          .cert-status-row {
+            margin-bottom: 1.25rem;
+          }
+
+          .cert-status-badge {
+            font-size: 0.72rem;
+            padding: 0.25rem 0.85rem;
+          }
+
           .cert-footer-row {
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1.25rem;
+            padding-top: 1rem;
           }
+
           .cert-signature-block {
             width: 100%;
+            max-width: 220px;
+          }
+
+          .seal-circle {
+            width: 68px;
+            height: 68px;
+          }
+
+          .seal-inner {
+            width: 56px;
+            height: 56px;
+            font-size: 0.5rem;
           }
         }
       `}</style>

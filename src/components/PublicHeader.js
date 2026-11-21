@@ -23,7 +23,7 @@ export default function PublicHeader() {
           setUser(data.user);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [pathname]);
 
   // Close mobile menu and language dropdown on route change
@@ -49,7 +49,7 @@ export default function PublicHeader() {
     { label: t('nav.about', 'ABOUT'), path: '/about' },
     { label: t('nav.media', 'MEDIA'), path: '/media' },
     { label: t('nav.available_food', 'AVAILABLE FOOD LIST'), path: '/available-food' },
-    { label: '🎂 ANNADAN SANKALP', path: '/annadan-sankalp' },
+    { label: 'ANNADAN SANKALP', path: '/annadan-sankalp' },
     { label: t('nav.donate', 'DONATE'), path: '/donate' },
     { label: t('nav.contact', 'CONTACT'), path: '/contact' }
   ];
@@ -58,17 +58,17 @@ export default function PublicHeader() {
     <header className={`public-header ${language === 'en' ? 'public-header-en' : ''}`}>
       <nav className="public-nav">
         <Link href="/" className="public-logo">
-          <img 
-            src="/icon.png" 
-            alt="Anna Seva Logo" 
-            style={{ 
-              width: '32px', 
-              height: '32px', 
+          <img
+            src="/icon.png"
+            alt="Anna Seva Logo"
+            style={{
+              width: '32px',
+              height: '32px',
               borderRadius: '50%',
               objectFit: 'cover',
               border: '2px solid var(--accent-teal)',
               flexShrink: 0
-            }} 
+            }}
           />
           <span className="public-logo-devanagari">अन्न सेवा</span>
           <span>ANNA SEVA</span>
@@ -98,7 +98,7 @@ export default function PublicHeader() {
               </li>
             );
           })}
-          
+
           {user ? (
             <li className="nav-dashboard-item">
               <Link
